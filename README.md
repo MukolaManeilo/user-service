@@ -1,1 +1,1 @@
-# MERN-WebStore-CRM
+# skill-share-platform
