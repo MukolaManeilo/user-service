@@ -1,1 +1,1 @@
-# skill-share-platform
+# skill-share-platform-server
