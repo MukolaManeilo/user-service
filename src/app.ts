@@ -1,7 +1,7 @@
 import express from 'express';
 import passport from 'passport';
 import session from 'express-session';
-import { Strategy as LocalStrategy } from 'passport-local';
+import {Strategy as LocalStrategy} from 'passport-local';
 import RedisStore from 'connect-redis';
 import Redis from 'ioredis';
 import bcrypt from 'bcrypt';
@@ -20,12 +20,12 @@ const redisStore = new RedisStore({
 
 
 app.use(
-  session({
-    store: redisStore,
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: false,
-  })
+    session({
+      store: redisStore,
+      secret: 'keyboard cat',
+      resave: false,
+      saveUninitialized: false,
+    })
 );
 
 
@@ -39,22 +39,22 @@ const users: User[] = [
 
 
 passport.use(
-  new LocalStrategy(
-    {
-      usernameField: 'email',
-    },
-    (email: string, password: string, done: Function) => {
-      const user = users.find((u) => u.email === email);
-      if (!user) return done(null, false, { message: 'User not found' });
+    new LocalStrategy(
+        {
+          usernameField: 'email',
+        },
+        (email: string, password: string, done: Function) => {
+          const user = users.find((u) => u.email === email);
+          if (!user) return done(null, false, { message: 'User not found' });
 
-      bcrypt.compare(password, user.password, (err, isMatch) => {
-        if (err) return done(err);
-        if (!isMatch) return done(null, false, { message: 'Incorrect password' });
+          bcrypt.compare(password, user.password, (err, isMatch) => {
+            if (err) return done(err);
+            if (!isMatch) return done(null, false, { message: 'Incorrect password' });
 
-        return done(null, user);
-      });
-    }
-  )
+            return done(null, user);
+          });
+        }
+    )
 );
 
 
@@ -82,7 +82,12 @@ app.post('/register', (req, res) => {
     };
 
     users.push(newUser);
-    res.status(200).send('User registered');
+
+
+    req.login(newUser, (err) => {
+      if (err) return res.status(500).send('Error logging in after registration');
+      res.status(200).send('User registered and logged in');
+    });
   });
 });
 
