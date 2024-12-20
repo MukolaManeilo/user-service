@@ -1,15 +1,15 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "app.ts",
   "scripts": {
     "build": "tsc",
     "start": "node dist/app.js",
     "dev": "tsx watch src/app.ts"
   },
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "repository": "git@github.com:MukolaManeilo/skill-share-platform-server.git",
+  "author": "Mukola Maneilo",
+  "license": "MIT",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "connect-redis": "^7.1.1",
