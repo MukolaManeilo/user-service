@@ -14,5 +14,7 @@ const ChatSchema: Schema<IChat> = new Schema({
 	lastMessageId: { type: Schema.Types.ObjectId, ref: 'Message', required: true },
 }, { timestamps: true, })
 
+ChatSchema.index({ expertId: 1, clientId: 1 }, { unique: true });
+
 const Chat = mongoose.model<IChat>('Chat', ChatSchema);
 export default Chat;

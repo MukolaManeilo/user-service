@@ -12,7 +12,6 @@ interface IExpert extends Document {
 	mentoring: boolean;
 	category: ICategory;
 	skills: string[];
-	tasksId: mongoose.Types.ObjectId[];
 	rating: IRating;
 }
 
@@ -20,13 +19,12 @@ interface IExpert extends Document {
 const ExpertSchema: Schema<IExpert> = new Schema({
 	firstName: {type: String, required: true},
 	lastName: {type: String, required: true},
-	email: {type: String, required: true},
-	password: {type: String, required: true},
-	balance: {type: Number, required: true},
-	mentoring: {type: Boolean, required: true},
+	email: {type: String, required: true, unique: true, match: /^[a-zA-Z0-9]+@gmail\.com$/, set: (val: any) => val.toLowerCase()},
+	password: {type: String, required: true, select: false},
+	balance: {type: Number, default: 0, required: true},
+	mentoring: {type: Boolean, default: false, required: true},
 	category: {type: CategorySchema, required: true},
 	skills:[{type: String, required: false}],
-	tasksId: [{type: Schema.Types.ObjectId, ref: "Task", required: false}],
 	rating: {type: RatingSchema, required: true},
 }, { timestamps: true, })
 

@@ -8,17 +8,15 @@ interface IClient extends Document {
 	email: string;
 	password: string;
 	balance: number;
-	tasksId?: mongoose.Types.ObjectId[];
 	rating: IRating;
 }
 
 const ClientSchema: Schema<IClient> = new Schema({
 	firstName: {type: String, required: true},
 	lastName: {type: String, required: true},
-	email: {type: String, required: true},
-	password: {type: String, required: true},
-	balance: {type: Number, required: true},
-	tasksId: [{type: Schema.Types.ObjectId, ref: "Task", require: false}],
+	email: {type: String, required: true, unique: true, match: /^[a-zA-Z0-9]+@gmail\.com$/, set: (val: any) => val.toLowerCase()},
+	password: {type: String, required: true, select: false},
+	balance: {type: Number, default: 0, required: true},
 	rating: {type: RatingSchema, required: true},
 }, { timestamps: true, });
 
