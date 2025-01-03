@@ -3,7 +3,7 @@ import {MessageType} from "../types/messageType";
 import {UserRole} from "../types/userRole";
 
 
-interface IMessage extends Document {
+export interface IMessage extends Document {
 	chatId: mongoose.Types.ObjectId;
 	senderRole: UserRole;
 	type: MessageType;
@@ -16,10 +16,10 @@ interface IMessage extends Document {
 
 const MessageSchema: Schema<IMessage> = new Schema({
 	chatId: { type: Schema.Types.ObjectId, ref: 'Chat', required: true },
-	senderRole: { type: Number, Enum: Object.values(UserRole), required: true },
+	senderRole: { type: Number, enum: Object.values(UserRole), required: true },
 	type: { type: Number, enum: Object.values(MessageType), required: true },
 	text: { type: String, required: false},
-	materialsId: [{ type: Schema.Types.ObjectId, ref: 'Material', required: false}],
+	materialsId: [{ type: Schema.Types.ObjectId, ref: 'Material'}],
 	taskId: { type: Schema.Types.ObjectId, ref: 'Task', required: false},
 	revisedAt: { type: Date, required: false},
 }, { timestamps: true, })

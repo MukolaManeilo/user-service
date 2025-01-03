@@ -1,55 +1,41 @@
-import {Request, Response} from 'express';
-import {hashPassword} from '../utils/hash';
+import {NextFunction, Request, Response} from 'express';
+import {createExpert} from "../services/expertService";
 
-interface User {
-	id: number;
-	email: string;
-	password: string;
-}
 
-const users: User[] = [
-	{ id: 1, email: 'user@example.com', password: '$2b$10$abc123...' },
-];
-
-/**
- * Registration controller
- */
-export const registerUser = async (req: Request, res: Response): Promise<void> => {
-	const { email, password } = req.body;
-
+export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
+	const {isExpert, firstName, lastName, email, password, mentoring, skills} = req.body;
+	
 	try {
-		const hashedPassword = await hashPassword(password);
+		if(isExpert){
+			const newExpert = await createExpert(firstName, lastName, email, password, mentoring, skills);
 
-		const newUser: User = {
-			id: users.length + 1,
-			email,
-			password: hashedPassword,
-		};
+			req.login(newExpert, (err) => {
+				if (err) {
+					throw new Error('Error logging in user after registration');
+				}
+				res.status(201).json({
+					message: 'Expert registered and logged in successfully',
+					expert: newExpert,
+				});
+			});
 
-		users.push(newUser);
-
-		req.login(newUser, (err) => {
-			if (err) {
-				res.status(500).send('Error logging in after registration');
-			} else {
-				res.status(200).send('User registered and logged in');
-			}
-		});
-	} catch (error) {
-		res.status(500).send('Error during registration');
+		}
+	}
+	catch(err) {
+		if (err instanceof Error) {
+			next(Error(`Registration error: ${err.message}`));
+		} else {
+			next(Error('Something went wrong during registration'));
+		}
 	}
 };
 
-/**
- * Login controller
- */
+
 export const loginUser = (req: Request, res: Response): void => {
 	res.status(200).send('User successfully logged in');
 };
 
-/**
- * Logout controller
- */
+
 export const logoutUser = (req: Request, res: Response): void => {
 	req.logout((err) => {
 		if (err) {

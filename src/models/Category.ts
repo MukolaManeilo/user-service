@@ -1,29 +1,19 @@
-import {Schema} from "mongoose";
-
-export interface ISubCategory {
-	name: string;
-	description: string;
-	tags?: string[];
-	subCategory?: ISubCategory;
-}
+import mongoose, {Schema} from "mongoose";
 
 export interface ICategory {
 	name: string;
 	description: string;
-	tags?: string[];
-	subCategory: ISubCategory;
+	tags: string[];
+	subCategories: (mongoose.Types.ObjectId | ICategory | undefined)[];
 }
-
-export const SubCategorySchema: Schema<ISubCategory> = new Schema({
-	name: { type: String, required: true },
-	description: { type: String, required: true },
-	tags: [{ type: String, required: false }],
-	subCategory: { type: Schema.Types.Mixed, required: false },
-});
 
 export const CategorySchema: Schema<ICategory> = new Schema({
 	name: { type: String, required: true },
 	description: { type: String, required: true },
 	tags: [{ type: String, required: false }],
-	subCategory: { type: SubCategorySchema, required: false },
+	subCategories: [{ type: mongoose.Types.ObjectId, ref:'Category', required: true, default: [] }],
 });
+
+const Category = mongoose.model<ICategory>('Category', CategorySchema);
+
+export default Category;

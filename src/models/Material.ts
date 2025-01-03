@@ -1,7 +1,7 @@
 import mongoose, {Document, Schema} from 'mongoose';
 
 
-interface IMaterial extends Document {
+export interface IMaterial extends Document {
 	name: string;
 	type: string;
 	size: number;

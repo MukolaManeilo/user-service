@@ -2,7 +2,7 @@ import mongoose, {Document, Schema} from 'mongoose';
 import {IRating, RatingSchema} from "./Rating";
 
 
-interface IClient extends Document {
+export interface IClient extends Document {
 	firstName: string;
 	lastName: string;
 	email: string;
@@ -14,7 +14,9 @@ interface IClient extends Document {
 const ClientSchema: Schema<IClient> = new Schema({
 	firstName: {type: String, required: true},
 	lastName: {type: String, required: true},
-	email: {type: String, required: true, unique: true, match: /^[a-zA-Z0-9]+@gmail\.com$/, set: (val: any) => val.toLowerCase()},
+	email: {type: String, required: true, unique: true,
+		match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+		set: (val: any) => val.toLowerCase()},
 	password: {type: String, required: true, select: false},
 	balance: {type: Number, default: 0, required: true},
 	rating: {type: RatingSchema, required: true},

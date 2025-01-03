@@ -5,8 +5,8 @@ import bcrypt from 'bcrypt';
  * @param password - The password to hash
  * @returns A promise containing the hashed password
  */
-export const hashPassword = (password: string): Promise<string> => {
-	return bcrypt.hash(password, 10);
+export const hashPassword = async (password: string): Promise<string> => {
+	return await bcrypt.hash(password, 10);
 };
 
 /**
@@ -15,6 +15,6 @@ export const hashPassword = (password: string): Promise<string> => {
  * @param hashedPassword - The stored hashed password
  * @returns A promise containing the verification result
  */
-export const comparePassword = (password: string, hashedPassword: string): Promise<boolean> => {
-	return bcrypt.compare(password, hashedPassword);
+export const comparePassword = async (password: string, hashedPassword: string): Promise<boolean> => {
+	return await bcrypt.compare(password, hashedPassword);
 };

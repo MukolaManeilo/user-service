@@ -17,7 +17,8 @@ interface ITask extends Document {
 const TaskSchema: Schema<ITask> = new Schema({
 	expertId: { type: Schema.Types.ObjectId, ref: 'Expert', required: true, },
 	clientId: { type: Schema.Types.ObjectId, ref: 'Client', required: true },
-	status: {type: Number, Enum: Object.values(TaskStatus), default: TaskStatus.NotStarted, required: true},
+	status: {type: Number, Enum: Object.values(TaskStatus),
+		default: TaskStatus.NotStarted, required: true},
 	price: {type: Number, default: 0, required: true},
 	taskDescription: {type: String, required: true},
 	startDate: {type: Date, required: true},

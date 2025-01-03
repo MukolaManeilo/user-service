@@ -1,6 +1,6 @@
-import {Schema} from "mongoose";
+import mongoose, {Document, Schema} from 'mongoose';
 
-export interface IRating {
+export interface IRating extends Document {
 	scores: number;
 	activityLog?: Date[];
 	responseTime?: number[];
@@ -15,3 +15,5 @@ export const RatingSchema: Schema<IRating> = new Schema({
 	sessionPrice: [{type: Number, required: false}],
 	reviews: [{type: Number, required: false}],
 })
+
+const Rating = mongoose.model<IRating>('Rating', RatingSchema);

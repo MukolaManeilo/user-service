@@ -1,7 +1,7 @@
 import mongoose, {Document, Schema} from 'mongoose';
 
 
-interface IChat extends Document {
+export interface IChat extends Document {
 	expertId: mongoose.Types.ObjectId;
 	clientId: mongoose.Types.ObjectId;
 	lastMessageId: mongoose.Types.ObjectId;
