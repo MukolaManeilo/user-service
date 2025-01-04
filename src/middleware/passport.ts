@@ -46,8 +46,6 @@ passport.use(
 );
 
 
-type User = IExpert | IClient;
-
 passport.serializeUser((user, done) => {
 	done(null, (user as IExpert | IClient).id);
 });

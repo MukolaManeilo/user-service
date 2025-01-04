@@ -1,5 +1,6 @@
 import mongoose, {Document, Schema} from 'mongoose';
 import {IRating, RatingSchema} from "./Rating";
+import validator from 'validator';
 
 
 export interface IClient extends Document {
@@ -12,14 +13,19 @@ export interface IClient extends Document {
 }
 
 const ClientSchema: Schema<IClient> = new Schema({
-	firstName: {type: String, required: true},
-	lastName: {type: String, required: true},
-	email: {type: String, required: true, unique: true,
-		match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-		set: (val: any) => val.toLowerCase()},
-	password: {type: String, required: true, select: false},
-	balance: {type: Number, default: 0, required: true},
-	rating: {type: RatingSchema, required: true},
+	firstName: { type: String, required: true },
+	lastName: { type: String, required: true },
+	email: {
+		type: String, required: true, unique: true,
+		validate: {
+			validator: (value: string) => validator.isEmail(value),
+			message: 'Invalid email format',
+		},
+		set: (val: any) => val.toLowerCase(),
+	},
+	password: { type: String, required: true, minlength: 8, maxlength: 32, select: false },
+	balance: { type: Number, default: 0, min: [0, 'Balance cannot be negative'], required: true },
+	rating: { type: RatingSchema, required: true },
 }, { timestamps: true, });
 
 
