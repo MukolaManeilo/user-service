@@ -1,5 +1,5 @@
 import {hashPassword} from '../utils/hash';
-import Client, {IClient} from "../models/Client";
+import Client, {IClient} from "../models/client";
 
 
 export const createClient = async (firstName: string, lastName: string, email: string, password: string): Promise<IClient> => {

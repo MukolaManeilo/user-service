@@ -1,5 +1,5 @@
-import Expert, {IExpert} from '../models/Expert';
-import Category from '../models/Category';
+import Expert, {IExpert} from '../models/expert';
+import Category from '../models/category';
 import {hashPassword} from '../utils/hash';
 
 

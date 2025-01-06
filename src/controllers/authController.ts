@@ -1,8 +1,8 @@
 import {NextFunction, Request, Response} from 'express';
 import {createExpert} from "../services/expertService";
 import passport from "passport";
-import Expert, {IExpert} from "../models/Expert";
-import Client, {IClient} from "../models/Client";
+import Expert, {IExpert} from "../models/expert";
+import Client, {IClient} from "../models/client";
 import {User} from "../types/d/express";
 import {createClient} from "../services/clientService";
 import {UserRole} from "../types/userRole";

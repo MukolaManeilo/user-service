@@ -1,6 +1,6 @@
 import mongoose, {Document, Schema} from 'mongoose';
-import {ICategory} from "./Category";
-import {IRating, RatingSchema} from "./Rating";
+import {ICategory} from "./category";
+import {IRating, RatingSchema} from "./rating";
 import validator from "validator";
 import {UserRole} from "../types/userRole";
 

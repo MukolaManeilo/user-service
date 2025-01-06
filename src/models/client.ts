@@ -1,5 +1,5 @@
 import mongoose, {Document, Schema} from 'mongoose';
-import {IRating, RatingSchema} from "./Rating";
+import {IRating, RatingSchema} from "./rating";
 import validator from 'validator';
 import {UserRole} from "../types/userRole";
 

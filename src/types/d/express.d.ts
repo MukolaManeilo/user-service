@@ -1,5 +1,5 @@
-import {IExpert} from "../../models/Expert";
-import {IClient} from "../../models/Client";
+import {IExpert} from "../../models/expert";
+import {IClient} from "../../models/client";
 
 type User = IExpert | IClient;
 

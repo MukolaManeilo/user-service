@@ -1,6 +1,6 @@
 import passport from 'passport';
-import Expert from '../models/Expert';
-import Client from '../models/Client';
+import Expert from '../models/expert';
+import Client from '../models/client';
 import {Strategy as LocalStrategy} from 'passport-local';
 import {comparePassword} from '../utils/hash';
 import {User} from "../types/d/express";
