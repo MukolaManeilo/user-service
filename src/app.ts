@@ -22,11 +22,8 @@ app.use(passport.session());
 app.use('/auth', authRoutes);
 
 app.get('/', (req, res) => {
-  res.send({
-    message: 'Welcome to the app!',
-  });
+  res.json({ message: 'Hello World', user: req.user });
 });
-
 app.use(errorHandler);
 
 app.listen(PORT, () => {

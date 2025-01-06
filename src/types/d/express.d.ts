@@ -1,7 +1,10 @@
-import {User as CustomUser} from '../user';
+import {IExpert} from "../../models/Expert";
+import {IClient} from "../../models/Client";
+
+type User = IExpert | IClient;
 
 declare global {
-  namespace Express {
-    interface User extends CustomUser {}
-  }
+	namespace Express {
+		interface User extends User{}
+	}
 }

@@ -16,8 +16,7 @@ export interface IMessage extends Document {
 
 const MessageSchema: Schema<IMessage> = new Schema({
 	chatId: { type: Schema.Types.ObjectId, ref: 'Chat', required: true },
-	senderRole: { type: Number, enum: Object.values(UserRole), required: true,
-		validate: (value: number) => Object.values(UserRole).includes(value) },
+	senderRole: { type: Number, enum: Object.values(UserRole), required: true},
 	type: { type: Number, enum: Object.values(MessageType), required: true ,
 		validate: (value: number) => Object.values(MessageType).includes(value) },
 	text: { type: String, maxlength: 1000, required: false },

@@ -1,20 +1,24 @@
 import passport from 'passport';
-import Expert, {IExpert} from '../models/Expert';
-import Client, {IClient} from '../models/Client';
+import Expert from '../models/Expert';
+import Client from '../models/Client';
 import {Strategy as LocalStrategy} from 'passport-local';
 import {comparePassword} from '../utils/hash';
+import {User} from "../types/d/express";
 
 passport.use(
-	'expert',
+	'local',
 	new LocalStrategy(
 		{ usernameField: 'email', passwordField: 'password' },
 		async (email, password, done) => {
 			try {
-				const user = await Expert.findOne({ email }).select('+password');
-				if (!user) return done(null, false, { message: 'User not found' });
+
+				let user: User = await Expert.findOne({ email }).select('+password');
+				if(!user) user = await Client.findOne({ email }).select('+password');
+
+				if (!user) return done(Error('User not found'), false);
 
 				const isMatch = await comparePassword(password, user.password);
-				if (!isMatch) return done(null, false, { message: 'Incorrect password' });
+				if (!isMatch) return done(Error('Incorrect password'), false);
 
 				return done(null, user);
 			} catch (error) {
@@ -24,39 +28,20 @@ passport.use(
 	)
 );
 
-
-passport.use(
-	'client',
-	new LocalStrategy(
-		{ usernameField: 'email', passwordField: 'password' },
-		async (email, password, done) => {
-			try {
-				const user: IClient | null = await Client.findOne({ email }).select('+password');
-				if (!user) return done(null, false, { message: 'User not found' });
-
-				const isMatch = await comparePassword(password, user.password);
-				if (!isMatch) return done(null, false, { message: 'Incorrect password' });
-
-				return done(null, user);
-			} catch (error) {
-				return done(error);
-			}
-		}
-	)
-);
 
 
 passport.serializeUser((user, done) => {
-	done(null, (user as IExpert | IClient).id);
+	done(null, (user as User).id);
 });
+
 
 passport.deserializeUser(async (id: string, done) => {
 	try {
-		const expert = await Expert.findById(id);
-		if (expert) return done(null, expert);
-
 		const client = await Client.findById(id);
 		if (client) return done(null, client);
+
+		const expert = await Expert.findById(id);
+		if (expert) return done(null, expert);
 
 		return done(null, null);
 	} catch (error) {

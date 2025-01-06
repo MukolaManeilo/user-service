@@ -1,18 +1,23 @@
-import Expert from '../models/Expert';
+import Expert, {IExpert} from '../models/Expert';
 import Category from '../models/Category';
 import {hashPassword} from '../utils/hash';
 
-// Helper function to calculate relevance
+
+/**
+ * Calculates the relevance of a user's skills to a given category.
+ *
+ * @param {string[]} categoryTags - The tags associated with a category.
+ * @param {string[]} userSkills - The skills of the user.
+ * @returns {number} - The relevance score from 0 to 1, representing the proportion of matching tags.
+ */
 const calculateRelevance = (categoryTags: string[], userSkills: string[]): number => {
-	const matches = categoryTags.filter(tag => userSkills.includes(tag)).length;
-	return matches / categoryTags.length; // Relevance from 0 to 1
+    const matches = categoryTags.filter(tag => userSkills.includes(tag)).length;
+    return matches / categoryTags.length; // Relevance from 0 to 1
 };
 
-export const createExpert = async (firstName: string, lastName: string, email: string, password: string, mentoring: boolean, skills: string[]) => {
 
-	if (await Expert.findOne({ email })) {
-		throw new Error('User with this email already exists.');
-	}
+
+export const createExpert = async (firstName: string, lastName: string, email: string, password: string, mentoring: boolean, skills: string[]): Promise<IExpert> => {
 
 	const categories = await Category.find();
 
@@ -38,8 +43,6 @@ export const createExpert = async (firstName: string, lastName: string, email: s
 		skills: skills || [],
 		rating: { scores: 0 },
 	});
-
-
 	await newExpert.save();
 	return newExpert;
 };
