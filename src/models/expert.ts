@@ -1,4 +1,4 @@
-import mongoose, {Document, Schema} from 'mongoose';
+import mongoose, {Schema} from 'mongoose';
 import {ICategory} from "./category";
 import {IRating, RatingSchema} from "./rating";
 import validator from "validator";
@@ -34,7 +34,7 @@ const ExpertSchema: Schema<IExpert> = new Schema({
 		set: (val: any) => val.toLowerCase(),
 	},
 	password: { type: String, required: true, minlength: 8, select: false },
-	userRole: { type: Number, enum: [UserRole.Expert], default: UserRole.Expert, required: true},
+	userRole: { type: String, enum: [UserRole.Expert], default: UserRole.Expert, required: true},
 	balance: { type: Number, default: 0, min: [0, 'Balance cannot be negative'], required: true },
 	mentoring: { type: Boolean, default: false, required: true },
 	categories: [{

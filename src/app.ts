@@ -6,6 +6,7 @@ import categorySeeder from './config/categorySeeder';
 import authRoutes from './routes/authRoutes';
 import passport from './middleware/passport';
 import errorHandler from "./middleware/errorHandler";
+import userRoutes from "./routes/userRoutes";
 
 dotenv.config();
 connectDB();
@@ -19,10 +20,11 @@ app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use('/user', userRoutes);
 app.use('/auth', authRoutes);
 
 app.get('/', (req, res) => {
-  res.json({ message: 'Hello World', user: req.user });
+  res.json({ message: 'Hello World', email: (req.user as UserUnion)?.email });
 });
 app.use(errorHandler);
 

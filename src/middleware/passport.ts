@@ -3,7 +3,6 @@ import Expert from '../models/expert';
 import Client from '../models/client';
 import {Strategy as LocalStrategy} from 'passport-local';
 import {comparePassword} from '../utils/hash';
-import {User} from "../types/d/express";
 
 passport.use(
 	'local',
@@ -12,14 +11,13 @@ passport.use(
 		async (email, password, done) => {
 			try {
 
-				let user: User = await Expert.findOne({ email }).select('+password');
+				let user = await Expert.findOne({ email }).select('+password');
 				if(!user) user = await Client.findOne({ email }).select('+password');
 
 				if (!user) return done(Error('User not found'), false);
 
 				const isMatch = await comparePassword(password, user.password);
 				if (!isMatch) return done(Error('Incorrect password'), false);
-
 				return done(null, user);
 			} catch (error) {
 				return done(error);
@@ -31,7 +29,11 @@ passport.use(
 
 
 passport.serializeUser((user, done) => {
-	done(null, (user as User).id);
+	if (user instanceof Expert || user instanceof Client) {
+		done(null, user.id);
+	} else {
+		done(null, null);
+	}
 });
 
 

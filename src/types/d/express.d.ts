@@ -1,10 +1,10 @@
 import {IExpert} from "../../models/expert";
 import {IClient} from "../../models/client";
 
-type User = IExpert | IClient;
 
 declare global {
+	type UserUnion = (IExpert & { id?: string }) | (IClient & { id?: string });
 	namespace Express {
-		interface User extends User{}
+		interface User extends UserUnion{}
 	}
 }

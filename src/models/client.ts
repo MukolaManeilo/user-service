@@ -1,4 +1,4 @@
-import mongoose, {Document, Schema} from 'mongoose';
+import mongoose, {Schema} from 'mongoose';
 import {IRating, RatingSchema} from "./rating";
 import validator from 'validator';
 import {UserRole} from "../types/userRole";
@@ -26,7 +26,7 @@ const ClientSchema: Schema<IClient> = new Schema({
 		set: (val: any) => val.toLowerCase(),
 	},
 	password: { type: String, required: true, minlength: 8, select: false },
-	userRole: { type: Number, enum: [UserRole.Client], default: UserRole.Client, required: true},
+	userRole: { type: String, enum: [UserRole.Client], default: UserRole.Client, required: true},
 	balance: { type: Number, default: 0, min: [0, 'Balance cannot be negative'], required: true },
 	rating: { type: RatingSchema, required: true },
 }, { timestamps: true, });

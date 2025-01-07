@@ -1,6 +1,6 @@
 import mongoose, {Schema} from "mongoose";
 
-export interface ICategory {
+export interface ICategory extends Document {
 	name: string;
 	description: string;
 	tags: string[];
