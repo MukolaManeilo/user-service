@@ -1,7 +1,7 @@
 import Category from '../models/category';
 
-const seed = async () => {
 
+const seed = async () => {
 	if (await Category.findOne()) {
 		console.log('Categories already exist, skipping seeding.');
 		return;
@@ -109,7 +109,6 @@ const seed = async () => {
 			tags: category.tags,
 			subCategories: [],
 		});
-
 		if (category.subCategories && category.subCategories.length) {
 			for (let sub of category.subCategories) {
 				const subCategories = await createCategoryWithSubcategories(sub);
@@ -119,11 +118,12 @@ const seed = async () => {
 		await newCategory.save();
 		return newCategory;
 	};
-
 	for (let category of categories) {
 		await createCategoryWithSubcategories(category);
 	}
 };
+
+
 
 const categorySeeder = () => {
 	seed()

@@ -4,6 +4,7 @@ import Client from '../models/client';
 import {Strategy as LocalStrategy} from 'passport-local';
 import {comparePassword} from '../utils/hash';
 
+
 passport.use(
 	'local',
 	new LocalStrategy(

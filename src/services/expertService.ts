@@ -3,7 +3,14 @@ import Category from '../models/category';
 import {hashPassword} from '../utils/hash';
 
 
+/**
+ * Type representing an identifier for an Expert.
+ *
+ * This type can either be an object with an `id` field and no `email` field,
+ * or an object with an `email` field and no `id` field.
+ */
 type ExpertIdentifier = { id: string; email?: never } | { email: string; id?: never };
+
 
 /**
  * Calculates the relevance of a user's skills to a given category.
@@ -51,51 +58,46 @@ export const createExpert = async (firstName: string, lastName: string, email: s
 
 
 
-export const getExpert = async (id: string): Promise<IExpert> => {
-	const expert = await Expert.findById(id);
+export const getExpert = async (identifier: ExpertIdentifier): Promise<IExpert> => {
+	const expert = identifier.id
+		? await Expert.findById(identifier.id)
+		: await Expert.findOne({ email: identifier.email });
 	if (!expert) throw new Error('Expert not found');
 	return expert;
 };
 
 
 
-export const updateExpert = async (userId: string, data: Partial<IExpert>): Promise<IExpert> => {
-	const expert = await Expert.findById(userId);
+export const updateExpert = async (identifier: ExpertIdentifier, data: Partial<IExpert>): Promise<IExpert> => {
+	const expert = identifier.id
+		? await Expert.findById(identifier.id)
+		: await Expert.findOne({ email: identifier.email });
 	if (!expert) throw new Error('Expert not found');
 
 	Object.assign(expert, data);
-	await expert.save().catch((err) => {
-		throw new Error(`Error updating expert: ${err.message}`);
-	});
+	await expert.save()
+		.catch((err) => {
+			throw new Error(`Error updating expert: ${err.message}`);
+		});
 	return expert;
 }
 
 
 
 export const isExpertExists = async (identifier: ExpertIdentifier): Promise<boolean> => {
-	if ('id' in identifier) {
-		const expert = await Expert.findById(identifier.id);
-		return !!expert;
-	}
-
-	if ('email' in identifier) {
-		const expert = await Expert.findOne({ email: identifier.email });
-		return !!expert;
-	}
-	throw new Error('Invalid input');
+	const expert = identifier.id
+		? await Expert.findById(identifier.id)
+		: await Expert.findOne({ email: identifier.email });
+	return !!expert;
 };
 
 
 
 export const deleteExpert = async (identifier: ExpertIdentifier): Promise<boolean> => {
-	if ('id' in identifier) {
-		const result = await Expert.deleteOne({_id: identifier.id});
-		return result.deletedCount > 0;
-	}
+	const filter = identifier.id
+		? { _id: identifier.id }
+		: { email: identifier.email };
 
-	if ('email' in identifier) {
-		const result = await Expert.deleteOne({ email: identifier.email });
-		return result.deletedCount > 0;
-	}
-	throw new Error('Invalid input');
+	const expert = await Expert.deleteOne(filter);
+	return expert.deletedCount > 0;
 };

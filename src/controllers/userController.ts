@@ -16,12 +16,12 @@ export const getUser = async (req: Request, res: Response, next: NextFunction): 
 
 		const userIsExpert: boolean = await isExpertExists({ id: userId });
 		if (userIsExpert) {
-			user = await getExpert(userId);
+			user = await getExpert({id: userId});
 			userType = 'Expert';
 		} else {
 			const userIsClient: boolean = await isClientExists({ id: userId });
 			if (userIsClient) {
-				user = await getClient(userId);
+				user = await getClient({id: userId});
 				userType = 'Client';
 			}
 		}
@@ -50,11 +50,11 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 
 		if(userRole === UserRole.Expert){
 			if(req.user instanceof Expert){
-				newUser = await updateExpert(req.user.id, req.body);
+				newUser = await updateExpert({id: req.user.id}, req.body);
 			}
 		} else if(userRole === UserRole.Client) {
 			if(req.user instanceof Client) {
-				newUser = await updateClient(req.user.id, req.body);
+				newUser = await updateClient({id: req.user.id}, req.body);
 			}
 		}
 

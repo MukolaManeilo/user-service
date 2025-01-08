@@ -8,8 +8,8 @@ import {UserRole} from "../types/userRole";
 
 
 export const registerUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-
 	const {userRole, firstName, lastName, email, password, mentoring, skills} = req.body;
+
 	try {
 		if(req.isAuthenticated()) throw new Error('User is already logged in');
 		const exists = await isClientExists({ email }) || await isExpertExists({ email });
@@ -86,7 +86,6 @@ export const loginUser = (req: Request, res: Response, next: NextFunction) => {
 
 
 export const logoutUser = (req: Request, res: Response, next: NextFunction) => {
-
 	if(!req.isAuthenticated()) return next(new Error('User is not logged in'));
 
 	req.logout((err) => {
