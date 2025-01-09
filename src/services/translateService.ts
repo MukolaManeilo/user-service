@@ -17,8 +17,7 @@ if (!authKey) {
  * @returns Translated text.
  */
 
-const translate = async (text: string, targetLanguage: deepl.TargetLanguageCode = 'en-US'):
-	Promise<string> => {
+const translate = async (text: string, targetLanguage: deepl.TargetLanguageCode = 'en-US'): Promise<string> => {
 	try {
 		const translator = new deepl.Translator(authKey);
 		const result = await translator.translateText(text, null, targetLanguage);

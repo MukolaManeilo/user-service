@@ -5,7 +5,9 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/app.js",
-    "dev": "tsx watch src/app.ts"
+    "dev": "tsx watch src/app.ts",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "repository": "git@github.com:MukolaManeilo/skill-share-platform-server.git",
   "author": "Mukola Maneilo",
@@ -31,9 +33,14 @@
     "@types/express": "^5.0.0",
     "@types/express-session": "^1.18.0",
     "@types/ioredis": "^4.28.10",
+    "@types/jest": "^29.5.14",
     "@types/node": "^22.9.0",
     "@types/passport": "^1.0.17",
     "@types/passport-local": "^1.0.38",
+    "@types/supertest": "^6.0.2",
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.2.5",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3"
   }
