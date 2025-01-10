@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import translate from '../../../services/translateService';
+import translate from '../../services/translateService';
 
 dotenv.config();
 
