@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 import * as dotenv from 'dotenv';
+import errorHandler from "../utils/errorHandler";
+import {StartUpError} from "../types/errorTypes";
 
 dotenv.config();
 
@@ -11,7 +13,11 @@ const connectDB = () => {
 			console.log('MongoDB connected');
 		})
 		.catch((err) => {
-			console.error('MongoDB connecting error:', err);
+			if (err instanceof Error) {
+				return errorHandler(new StartUpError(`MongoDB connecting Error: ${err.message}`));
+			} else {
+				return errorHandler(new StartUpError('An unknown error occurred during MongoDB connection'));
+			}
 		});
 }
 

@@ -1,9 +1,9 @@
-import {NextFunction, Request, Response} from 'express';
+import {Request, Response} from 'express';
+import errorHandler from "../utils/errorHandler";
 
 
-const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
-	console.error(err.message);
-	res.status(500).json({ error: err.message });
+const errorHandlerMiddleware = (err: Error, req: Request, res: Response) => {
+	errorHandler(err, req, res);
 }
 
-export default errorHandler;
+export default errorHandlerMiddleware;

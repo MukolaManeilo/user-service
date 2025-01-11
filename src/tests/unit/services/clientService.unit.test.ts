@@ -1,16 +1,13 @@
 import {createClient, deleteClient, getClient, isClientExists, updateClient} from "../../../services/clientService";
 import Client from "../../../models/client";
 
+//jest.mock('../../../models/client');
 
 jest.mock("../../../models/client", () => {
 	const originalModule = jest.requireActual("../../../models/client");
 	return {
 		__esModule: true,
 		...originalModule,
-		findById: jest.fn(),
-		findOne: jest.fn(),
-		deleteOne: jest.fn(),
-		save: jest.fn(),
 	};
 });
 
