@@ -10,7 +10,7 @@ const errorHandler = (err: ICustomError, req?: Request, res?: Response) => {
 	console.error(`${err.name} : ${statusCode} : ${message}`);
 
 	if (req && res) {
-		res.status(statusCode).json({error: message});
+		res.status(statusCode).json({message: message});
 	} else {
 		if(err instanceof StartUpError){
 			process.exit(1);

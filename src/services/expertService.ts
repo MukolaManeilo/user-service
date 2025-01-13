@@ -1,6 +1,7 @@
 import Expert, {IExpert} from '../models/expert';
 import Category from '../models/category';
 import {hashPassword} from '../utils/hash';
+import {NotFoundError} from "../types/errorTypes";
 
 
 /**
@@ -62,7 +63,7 @@ export const getExpert = async (identifier: ExpertIdentifier): Promise<IExpert> 
 	const expert = identifier.id
 		? await Expert.findById(identifier.id)
 		: await Expert.findOne({ email: identifier.email });
-	if (!expert) throw new Error('Expert not found');
+	if (!expert) throw new NotFoundError('Expert not found');
 	return expert;
 };
 
@@ -72,7 +73,7 @@ export const updateExpert = async (identifier: ExpertIdentifier, data: Partial<I
 	const expert = identifier.id
 		? await Expert.findById(identifier.id)
 		: await Expert.findOne({ email: identifier.email });
-	if (!expert) throw new Error('Expert not found');
+	if (!expert) throw new NotFoundError('Expert not found');
 
 	Object.assign(expert, data);
 	await expert.save()

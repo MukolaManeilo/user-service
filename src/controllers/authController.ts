@@ -5,16 +5,17 @@ import Client, {IClient} from "../models/client";
 import {createClient, isClientExists} from "../services/clientService";
 import {createExpert, isExpertExists} from "../services/expertService";
 import {UserRole} from "../types/userRole";
+import {ICustomError, ValidationError} from "../types/errorTypes";
 
 
 export const registerUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-	const {userRole, firstName, lastName, email, password, mentoring, skills} = req.body;
-
 	try {
-		if(req.isAuthenticated()) throw new Error('User is already logged in');
+		const {userRole, firstName, lastName, email, password, mentoring, skills} = req.body;
+
+		if(req.isAuthenticated()) throw new ValidationError('User is already logged in');
 		const exists = await isClientExists({ email }) || await isExpertExists({ email });
 		if (exists) {
-			throw new Error('User with this email already exists.');
+			throw new ValidationError('User with this email already exists.');
 		}
 		if(userRole === UserRole.Expert){
 			const newExpert = await createExpert(firstName, lastName, email, password, mentoring, skills);
@@ -41,11 +42,11 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
 			});
 			return;
 		}
-		throw new Error('Invalid user role');
+		throw new ValidationError('Invalid user role');
 	}
 	catch(err) {
-		if (err instanceof Error) {
-			return next(new Error(`Registration error: ${err.message}`));
+		if ((err as ICustomError).message) {
+			return next(`Registration error: ${(err as ICustomError).message}`);
 		} else {
 			return next(new Error('Something went wrong during registration'));
 		}
@@ -54,49 +55,68 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
 
 
 
-export const loginUser = (req: Request, res: Response, next: NextFunction) => {
-	const {email, password} = req.body;
+export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
+	try{
+		const {email, password} = req.body;
 
-	if(!email || !password) return next(new Error('Email and password are required'));
-	if(req.isAuthenticated()) return next(new Error('User is already logged in'));
+		if(!email || !password) return next(new ValidationError('Email and password are required'));
+		if(req.isAuthenticated()) return next(new ValidationError('User is already logged in'));
+		const exists = await isClientExists({ email }) || await isExpertExists({ email });
+		if (!exists) throw new ValidationError('The user with this address does not exist');
 
-	passport.authenticate('local', (err: any, user: UserUnion, info: any) => {
-		if(err) {
-			if (err instanceof Error) {
-				return next(new Error(`Login error: ${err.message}`));
-			} else {
-				return next(new Error('Something went wrong during login'));
+
+		passport.authenticate('local', (err: any, user: UserUnion, info: any) => {
+			if(err) {
+				if ((err as ICustomError).message) {
+					return next(`Login error: ${err.message}`);
+				} else {
+					return next(new Error('Something went wrong during login'));
+				}
 			}
+			req.logIn(user, (err) => {
+				if (err) {
+					return next(new Error('Error logging in user after authentication'));
+				}
+				let response: {message: string, expert?: IExpert, client?: IClient} = { message: 'User successfully logged in'};
+				if (user instanceof Expert) {
+					response.expert = user;
+				} else if (user instanceof Client) {
+					response.client = user;
+				}
+				res.status(200).json(response);
+			});
+		})(req, res, next);
+	}catch(err) {
+		if ((err as ICustomError).message) {
+			return next(`LogIn error: ${(err as ICustomError).message}`);
+		} else {
+			return next(new Error('Something went wrong during login'));
 		}
-		req.logIn(user, (err) => {
-			if (err) {
-				return next(new Error('Error logging in user after authentication'));
-			}
-			let response: {message: string, expert?: IExpert, client?: IClient} = { message: 'User successfully logged in'};
-			if (user instanceof Expert) {
-				response.expert = user;
-			} else if (user instanceof Client) {
-				response.client = user;
-			}
-			res.status(200).json(response);
-		});
-	})(req, res, next);
+	}
 };
 
 
 
 export const logoutUser = (req: Request, res: Response, next: NextFunction) => {
-	if(!req.isAuthenticated()) return next(new Error('User is not logged in'));
+	try {
+		if(!req.isAuthenticated()) return next(new ValidationError('User is not logged in'));
 
-	req.logout((err) => {
-		if (err) {
-			if (err instanceof Error) {
-				return next(new Error(`Logout error: ${err.message}`));
+		req.logout((err) => {
+			if (err) {
+				if (err.message) {
+					return next(`Logout error: ${err.message}`);
+				} else {
+					return next(new Error('Something went wrong during logout'));
+				}
 			} else {
-				return next(new Error('Something went wrong during logout'));
+				res.clearCookie('connect.sid').redirect('/');
 			}
+		});
+	} catch(err) {
+		if ((err as ICustomError).message) {
+			return next(`LogOut error: ${(err as ICustomError).message}`);
 		} else {
-			res.clearCookie('connect.sid').redirect('/');
+			return next(new Error('Something went wrong during logout'));
 		}
-	});
+	}
 };

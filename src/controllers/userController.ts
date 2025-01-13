@@ -4,12 +4,13 @@ import Client from "../models/client";
 import Expert from "../models/expert";
 import {deleteExpert, getExpert, isExpertExists, updateExpert} from "../services/expertService";
 import {deleteClient, getClient, isClientExists, updateClient} from "../services/clientService";
+import {ICustomError, NotFoundError, UnauthorizedError, ValidationError} from "../types/errorTypes";
 
 
 export const getUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
 		const userId: string = req.params.id;
-		if (!userId || userId.trim() === '') throw new Error('User id is required');
+		if (!userId || userId.trim() === '') throw new ValidationError('User id is required');
 
 		let user = null;
 		let userType = '';
@@ -29,11 +30,11 @@ export const getUser = async (req: Request, res: Response, next: NextFunction): 
 		if (user) {
 			res.status(200).json({ message: `${userType} found`, user });
 		} else {
-			throw new Error('User not found');
+			throw new NotFoundError('User not found');
 		}
 	} catch (err) {
-		if (err instanceof Error) {
-			return next(new Error(`Get user error: ${err.message}`));
+		if ((err as ICustomError).message) {
+			return next(`Get user error: ${(err as ICustomError).message}`);
 		} else {
 			return next(new Error('Something went wrong while getting the user'));
 		}
@@ -44,7 +45,7 @@ export const getUser = async (req: Request, res: Response, next: NextFunction): 
 
 export const updateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
-		if(!req.isAuthenticated()) throw new Error('User is already logged in');
+		if(!req.isAuthenticated()) throw new UnauthorizedError('User is not logged in');
 		const userRole: UserRole = (req.user as UserUnion).userRole;
 		let newUser = null;
 
@@ -67,8 +68,8 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 			throw new Error('Error updating user');
 		}
 	} catch (err) {
-		if (err instanceof Error) {
-			return next(new Error(`Update user error: ${err.message}`));
+		if ((err as ICustomError).message) {
+			return next(`Update user error: ${(err as ICustomError).message}`);
 		} else {
 			return next(new Error('Unknown error while updating the user'));
 		}
@@ -79,7 +80,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 
 export const deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
-		if (!req.isAuthenticated()) throw new Error('User is not logged in');
+		if (!req.isAuthenticated()) throw new UnauthorizedError('User is not logged in');
 
 		const userRole: UserRole = (req.user as UserUnion).userRole;
 		let deletionSuccess = false;
@@ -110,8 +111,8 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
 		}
 
 	} catch (err) {
-		if (err instanceof Error) {
-			return next(new Error(`Delete user error: ${err.message}`));
+		if ((err as ICustomError).message) {
+			return next(`Delete user error: ${(err as ICustomError).message}`);
 		} else {
 			return next(new Error('Something went wrong while deleting the user'));
 		}

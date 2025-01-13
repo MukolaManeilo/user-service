@@ -1,5 +1,6 @@
 import * as deepl from 'deepl-node';
 import dotenv from 'dotenv';
+import {ICustomError} from "../types/errorTypes";
 
 dotenv.config();
 
@@ -23,8 +24,8 @@ const translate = async (text: string, targetLanguage: deepl.TargetLanguageCode 
 		const result = await translator.translateText(text, null, targetLanguage);
 		return result.text;
 	}catch(err) {
-		if (err instanceof Error) {
-			throw new Error(`Translation failed: ${err.message}`);
+		if ((err as ICustomError).message) {
+			throw new Error(`Translation failed: ${(err as ICustomError).message}`);
 		}
 		throw new Error('Translation failed for an unknown reason');
 	}

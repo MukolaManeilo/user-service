@@ -7,8 +7,8 @@ dotenv.config();
 
 const mongoURI = String(process.env.MONGODB_URI);
 
-const connectDB = () => {
-	mongoose.connect(mongoURI)
+const connectDB = (uri: string = mongoURI) => {
+	mongoose.connect(uri)
 		.then(() => {
 			console.log('MongoDB connected');
 		})

@@ -1,5 +1,6 @@
 import {hashPassword} from '../utils/hash';
 import Client, {IClient} from "../models/client";
+import {NotFoundError} from "../types/errorTypes";
 
 
 /**
@@ -32,7 +33,7 @@ export const getClient = async (identifier: ClientIdentifier): Promise<IClient> 
 	const client = identifier.id
 		? await Client.findById(identifier.id)
 		: await Client.findOne({ email: identifier.email });
-	if (!client) throw new Error('Client not found');
+	if (!client) throw new NotFoundError('Client not found');
 	return client;
 };
 
@@ -42,7 +43,7 @@ export const updateClient = async (identifier: ClientIdentifier, data: Partial<I
 	const client = identifier.id
 		? await Client.findById(identifier.id)
 		: await Client.findOne({ email: identifier.email });
-	if (!client) throw new Error('Client not found');
+	if (!client) throw new NotFoundError('Client not found');
 
 	Object.assign(client, data);
 	await client.save()
