@@ -6,12 +6,14 @@ import {ICategory} from "./models/category";
 import errorHandler from "./utils/errorHandler";
 import {StartUpError} from "./types/errorTypes";
 
-connectDB();
-categorySeeder(categories as ICategory[])
-	.catch((err) => errorHandler(new StartUpError(err.message)));
+const startUpDB = async () => {
+	await connectDB();
+	await categorySeeder(categories as ICategory[])
+		.catch((err) => errorHandler(new StartUpError(err.message)));
+}
 
+startUpDB();
 const PORT = Number(process.env.PORT) || 3000;
-
 app.listen(PORT, () => {
 	console.log(`Server running on http://localhost:${PORT}`);
 });

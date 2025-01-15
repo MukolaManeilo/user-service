@@ -1,7 +1,7 @@
 import request from 'supertest';
 import mongoose from 'mongoose';
 import * as dotenv from 'dotenv';
-import app from '../../app'; // Ваш Express додаток
+import app from '../../app';
 import Client from '../../models/client';
 import connectDB from '../../config/mongoDB';
 import categorySeeder from "../../config/categorySeeder";
@@ -21,10 +21,10 @@ const redisClient = new Redis({
 describe('Auth API Integration Tests', () => {
 	let cookie: string;
 
-	beforeAll(() => {
+	beforeAll(async () => {
 		const dbUri = String(process.env.TESTING_DB_URI);
-		connectDB(dbUri);
-		categorySeeder(categories as ICategory[])
+		await connectDB(dbUri);
+		await categorySeeder(categories as ICategory[])
 			.catch((err) => errorHandler(new StartUpError(err.message)));
 	});
 
@@ -61,10 +61,14 @@ describe('Auth API Integration Tests', () => {
 					password: 'password123',
 				});
 
+			cookie = response.headers['set-cookie'];
+
+
 			expect(response.status).toBe(200);
 			expect(response.body.message).toBe('User successfully logged in');
 			expect(response.body.client.email).toBe('john.doe@example.com');
-			cookie = response.headers['set-cookie'];
+
+
 		});
 
 		it('should log out the logged-in client', async () => {
