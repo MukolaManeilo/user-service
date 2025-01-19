@@ -1,9 +1,47 @@
-
 export interface ICustomError extends Error {
 	statusCode?: number;
 }
 
-export class ValidationError extends Error {
+export const defaultErrorMessage = {
+	InputValidationError: "Invalid input data provided",
+	SchemaValidationError: "Schema validation failed",
+	BadDataError: "Invalid or malformed data",
+	UnauthorizedError: "Unauthorized access",
+	NotFoundError: "The requested resource was not found",
+	InternalServerError: "An internal server error occurred",
+	DatabaseConnectionError: "Failed to connect to the database",
+	DatabaseUpdatingError: "Failed to update the database",
+	SessionError: "Session-related error occurred",
+	CacheError: "Cache processing error",
+	UnknownError: "An unknown error occurred",
+	APIError: "API communication error",
+	NetworkError: "Network error occurred",
+	TimeoutError: "The request timed out",
+	EnvironmentVariableError: "Environment variable is missing or invalid",
+	StartUpError: "Error occurred during application startup",
+	TestingError: "Error occurred during testing",
+};
+
+
+export class InputValidationError extends Error {
+	readonly statusCode = 422;
+
+	constructor(message: string) {
+		super(message);
+		this.name = "InputValidationError";
+	}
+}
+
+export class SchemaValidationError extends Error {
+	readonly statusCode = 400;
+
+	constructor(message: string) {
+		super(message);
+		this.name = "SchemaValidationError";
+	}
+}
+
+export class BadDataError extends Error {
 	readonly statusCode = 400;
 
 	constructor(message: string) {
@@ -39,8 +77,89 @@ export class InternalServerError extends Error {
 	}
 }
 
-export class StartUpError extends Error {
+export class DatabaseConnectionError extends Error {
+	readonly statusCode = 500;
+
 	constructor(message: string) {
+		super(message);
+		this.name = "DatabaseConnectionError";
+	}
+}
+
+export class DatabaseUpdatingError extends Error {
+	readonly statusCode = 500;
+
+	constructor(message: string) {
+		super(message);
+		this.name = "DatabaseUpdatingError";
+	}
+}
+
+export class SessionError extends Error {
+	readonly statusCode = 403;
+
+	constructor(message: string) {
+		super(message);
+		this.name = "SessionError";
+	}
+}
+
+export class CacheError extends Error {
+	readonly statusCode = 500;
+
+	constructor(message: string) {
+		super(message);
+		this.name = "CacheError";
+	}
+}
+
+export class UnknownError extends Error {
+	readonly statusCode = 500;
+
+	constructor(message: string) {
+		super(message);
+		this.name = "UnknownError";
+	}
+}
+
+export class APIError extends Error {
+	readonly statusCode = 502;
+
+	constructor(message: string) {
+		super(message);
+		this.name = "APIError";
+	}
+}
+
+export class NetworkError extends Error {
+	readonly statusCode = 503;
+
+	constructor(message: string) {
+		super(message);
+		this.name = "NetworkError";
+	}
+}
+
+export class TimeoutError extends Error {
+	readonly statusCode = 504;
+
+	constructor(message: string) {
+		super(message);
+		this.name = "TimeoutError";
+	}
+}
+
+export class EnvironmentVariableError extends Error {
+	readonly statusCode = 500;
+
+	constructor(message: string) {
+		super(message);
+		this.name = "EnvironmentVariableError";
+	}
+}
+
+export class StartUpError extends Error {
+	constructor(message?: string) {
 		super(message);
 		this.name = "StartUpError";
 	}
@@ -50,5 +169,6 @@ export class StartUpError extends Error {
 export class TestingError extends Error {
 	constructor(message: string) {
 		super(message);
+		this.name = "TestingError";
 	}
 }
