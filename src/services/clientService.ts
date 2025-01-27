@@ -1,6 +1,7 @@
 import {hashPassword} from '../utils/hash';
 import Client, {IClient} from "../models/client";
-import {NotFoundError} from "../types/errorTypes";
+import {DatabaseUpdatingError, InternalServerError, NotFoundError} from "../types/errorTypes";
+import {errorValidator} from "../utils/errorHandler";
 
 
 /**
@@ -14,7 +15,7 @@ type ClientIdentifier = { id: string; email?: never } | { email: string; id?: ne
 
 export const createClient = async (firstName: string, lastName: string, email: string, password: string): Promise<IClient> => {
 	const hashedPassword = await hashPassword(password);
-	if(!hashedPassword) throw new Error('Error hashing password');
+	if(!hashedPassword) throw new InternalServerError('Error hashing password');
 
 	const newClient = new Client({
 		firstName,
@@ -48,7 +49,7 @@ export const updateClient = async (identifier: ClientIdentifier, data: Partial<I
 	Object.assign(client, data);
 	await client.save()
 		.catch((err) => {
-			throw new Error(`Error updating client: ${err.message}`);
+			throw errorValidator(err, new DatabaseUpdatingError(`Error updating client`));
 		});
 	return client;
 }

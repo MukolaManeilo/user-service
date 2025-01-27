@@ -4,13 +4,20 @@ import Client from "../models/client";
 import Expert from "../models/expert";
 import {deleteExpert, getExpert, isExpertExists, updateExpert} from "../services/expertService";
 import {deleteClient, getClient, isClientExists, updateClient} from "../services/clientService";
-import {ICustomError, NotFoundError, UnauthorizedError, ValidationError} from "../types/errorTypes";
+import {
+	DatabaseUpdatingError,
+	InputValidationError,
+	LogoutUserError,
+	NotFoundError,
+	UnauthorizedError
+} from "../types/errorTypes";
+import {errorValidator} from "../utils/errorHandler";
 
 
 export const getUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
 		const userId: string = req.params.id;
-		if (!userId || userId.trim() === '') throw new ValidationError('User id is required');
+		if (!userId || userId.trim() === '') throw new InputValidationError('User id is required');
 
 		let user = null;
 		let userType = '';
@@ -33,11 +40,7 @@ export const getUser = async (req: Request, res: Response, next: NextFunction): 
 			throw new NotFoundError('User not found');
 		}
 	} catch (err) {
-		if ((err as ICustomError).message) {
-			return next(`Get user error: ${(err as ICustomError).message}`);
-		} else {
-			return next(new Error('Something went wrong while getting the user'));
-		}
+		return next(errorValidator(err, 'Get user error'));
 	}
 };
 
@@ -45,7 +48,7 @@ export const getUser = async (req: Request, res: Response, next: NextFunction): 
 
 export const updateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
-		if(!req.isAuthenticated()) throw new UnauthorizedError('User is not logged in');
+		if(!req.isAuthenticated()) throw new UnauthorizedError();
 		const userRole: UserRole = (req.user as UserUnion).userRole;
 		let newUser = null;
 
@@ -65,14 +68,10 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 				user: newUser,
 			});
 		}else {
-			throw new Error('Error updating user');
+			throw new DatabaseUpdatingError('Error updating user');
 		}
 	} catch (err) {
-		if ((err as ICustomError).message) {
-			return next(`Update user error: ${(err as ICustomError).message}`);
-		} else {
-			return next(new Error('Unknown error while updating the user'));
-		}
+		return next(errorValidator(err, 'Update user error'));
 	}
 };
 
@@ -80,15 +79,13 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 
 export const deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
-		if (!req.isAuthenticated()) throw new UnauthorizedError('User is not logged in');
+		if (!req.isAuthenticated()) throw new UnauthorizedError();
 
 		const userRole: UserRole = (req.user as UserUnion).userRole;
 		let deletionSuccess = false;
 		const user = req.user as UserUnion;
 		req.logout((err) => {
-			if (err) {
-				return next(new Error('Error during logout'));
-			}
+			if (err) throw new LogoutUserError();
 			res.clearCookie('connect.sid');
 		});
 
@@ -107,14 +104,10 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
 				message: `${userRole} deleted successfully`,
 			});
 		} else {
-			throw new Error('Error deleting user');
+			throw new DatabaseUpdatingError('Error deleting user');
 		}
 
 	} catch (err) {
-		if ((err as ICustomError).message) {
-			return next(`Delete user error: ${(err as ICustomError).message}`);
-		} else {
-			return next(new Error('Something went wrong while deleting the user'));
-		}
+		return next(errorValidator(err, 'Delete user error'));
 	}
 };

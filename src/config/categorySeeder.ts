@@ -1,10 +1,12 @@
 import Category, {ICategory} from '../models/category';
+import {StartUpError} from "../types/errorTypes";
+import {errorValidator} from "../utils/errorHandler";
 
 
-const categorySeeder = async (categories: ICategory[]) => {
+const categorySeeder = async (categories: ICategory[]): Promise<void> => {
 	try{
 		if (await Category.findOne()) {
-			console.log('Categories already exist, skipping seeding.');
+			console.log('Skipping categories seeding.');
 			return;
 		} else {
 			console.log('Seeding categories');
@@ -38,11 +40,7 @@ const categorySeeder = async (categories: ICategory[]) => {
 			await createCategoryWithSubcategories(category);
 		}
 	}catch (err) {
-		if (err instanceof Error) {
-			throw new Error(`Error seeding categories: ${err.message}`);
-		} else {
-			throw new Error('An unknown error occurred during category seeding');
-		}
+		throw errorValidator(err, new StartUpError('Error seeding categories'));
 	}
 };
 

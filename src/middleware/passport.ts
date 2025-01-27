@@ -3,6 +3,8 @@ import Expert from '../models/expert';
 import Client from '../models/client';
 import {Strategy as LocalStrategy} from 'passport-local';
 import {comparePassword} from '../utils/hash';
+import {InputValidationError, LoggingUserError, NotFoundError} from "../types/errorTypes";
+import {errorValidator} from "../utils/errorHandler";
 
 
 passport.use(
@@ -15,13 +17,13 @@ passport.use(
 				let user = await Expert.findOne({ email }).select('+password');
 				if(!user) user = await Client.findOne({ email }).select('+password');
 
-				if (!user) return done(Error('User not found'), false);
+				if (!user) return done(new NotFoundError('User not found'), false);
 
 				const isMatch = await comparePassword(password, user.password);
-				if (!isMatch) return done(Error('Incorrect password'), false);
+				if (!isMatch) return done(new InputValidationError('Incorrect password'), false);
 				return done(null, user);
-			} catch (error) {
-				return done(error);
+			} catch (err) {
+				return done(errorValidator(err, new LoggingUserError()));
 			}
 		}
 	)
@@ -47,8 +49,8 @@ passport.deserializeUser(async (id: string, done) => {
 		if (expert) return done(null, expert);
 
 		return done(null, null);
-	} catch (error) {
-		return done(error);
+	} catch (err) {
+		return done(errorValidator(err, 'Deserialize user error'));
 	}
 });
 

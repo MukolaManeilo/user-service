@@ -1,4 +1,5 @@
 import mongoose, {Document, Schema} from 'mongoose';
+import {DatabaseUpdatingError} from "../types/errorTypes";
 
 
 export interface IChat extends Document {
@@ -17,7 +18,7 @@ const ChatSchema: Schema<IChat> = new Schema({
 ChatSchema.index({ expertId: 1, clientId: 1 }, { unique: true });
 ChatSchema.pre('save', function (next) {
 	if (this.expertId.equals(this.clientId)) {
-		return next(new Error('Expert and client IDs must be different.'));
+		return next(new DatabaseUpdatingError('Expert and client IDs must be different.'));
 	}
 	next();
 });

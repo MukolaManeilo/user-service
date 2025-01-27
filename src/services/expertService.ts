@@ -1,7 +1,8 @@
 import Expert, {IExpert} from '../models/expert';
 import Category from '../models/category';
 import {hashPassword} from '../utils/hash';
-import {NotFoundError} from "../types/errorTypes";
+import {DatabaseUpdatingError, NotFoundError} from "../types/errorTypes";
+import {errorValidator} from "../utils/errorHandler";
 
 
 /**
@@ -34,9 +35,7 @@ export const createExpert = async (firstName: string, lastName: string, email: s
 	const relevantCategories = categories
 		.map(category => {
 			const relevance = calculateRelevance(category.tags, skills || []);
-			if (relevance) {
-				return { categoryId: category._id, relevance };
-			}
+			if (relevance) return { categoryId: category._id, relevance };
 			return null;
 		})
 		.filter(Boolean); // Remove null values
@@ -78,7 +77,7 @@ export const updateExpert = async (identifier: ExpertIdentifier, data: Partial<I
 	Object.assign(expert, data);
 	await expert.save()
 		.catch((err) => {
-			throw new Error(`Error updating expert: ${err.message}`);
+			throw errorValidator(err, new DatabaseUpdatingError(`Error updating expert`));
 		});
 	return expert;
 }

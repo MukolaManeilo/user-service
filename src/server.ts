@@ -3,13 +3,12 @@ import connectDB from "./config/mongoDB";
 import categorySeeder from "./config/categorySeeder";
 import categories from "./config/categories";
 import {ICategory} from "./models/category";
-import errorHandler from "./utils/errorHandler";
-import {StartUpError} from "./types/errorTypes";
+import {errorHandler} from "./utils/errorHandler";
 
 const startUpDB = async () => {
 	await connectDB();
 	await categorySeeder(categories as ICategory[])
-		.catch((err) => errorHandler(new StartUpError(err.message)));
+		.catch((err) => errorHandler(err));
 }
 
 startUpDB();

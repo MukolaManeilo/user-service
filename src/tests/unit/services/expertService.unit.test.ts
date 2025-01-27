@@ -36,6 +36,7 @@ describe("Expert Service", () => {
 		jest.clearAllMocks();
 	});
 
+
 	it('should create and save a new expert', async (): Promise<void> => {
 		Category.find = jest.fn().mockResolvedValue([mockCategory]);
 		jest.spyOn(Expert.prototype, 'save').mockResolvedValue(mockExpert);
@@ -49,6 +50,7 @@ describe("Expert Service", () => {
 		expect(Category.find).toHaveBeenCalledTimes(1);
 	});
 
+
 	it('should get a expert by id', async () => {
 		Expert.findById = jest.fn().mockResolvedValue(mockExpert);
 
@@ -57,6 +59,7 @@ describe("Expert Service", () => {
 		expect(expert.firstName).toBe('John');
 		expect(Expert.findById).toHaveBeenCalledWith('1');
 	});
+
 
 	it('should get a expert by email', async () => {
 		Expert.findOne = jest.fn().mockResolvedValue(mockExpert);
@@ -67,13 +70,10 @@ describe("Expert Service", () => {
 		expect(Expert.findOne).toHaveBeenCalledWith({ email: 'nonexistent@example.com' });
 	});
 
+
 	it('should update a expert', async () => {
 		const updatedData = { firstName: 'Jane' };
-
-
 		Expert.findOne = jest.fn().mockResolvedValue(new Expert(mockExpert));
-
-
 		jest.spyOn(Expert.prototype, 'save').mockResolvedValue({
 			...mockExpert,
 			firstName: 'Jane',
@@ -85,6 +85,7 @@ describe("Expert Service", () => {
 		expect(Expert.prototype.save).toHaveBeenCalledTimes(1);
 	});
 
+
 	it('should check if expert exists by id', async () => {
 		Expert.findById = jest.fn().mockResolvedValue(mockExpert);
 
@@ -93,6 +94,7 @@ describe("Expert Service", () => {
 		expect(exists).toBe(true);
 		expect(Expert.findById).toHaveBeenCalledWith('1');
 	});
+
 
 	it('should check if expert exists by email', async () => {
 		Expert.findOne = jest.fn().mockResolvedValue(mockExpert);
@@ -103,6 +105,7 @@ describe("Expert Service", () => {
 		expect(Expert.findOne).toHaveBeenCalledWith({ email: 'nonexistent@example.com' });
 	});
 
+
 	it('should delete a expert', async () => {
 		Expert.deleteOne = jest.fn().mockResolvedValue({ deletedCount: 1 });
 
@@ -112,6 +115,7 @@ describe("Expert Service", () => {
 		expect(Expert.deleteOne).toHaveBeenCalledWith({ email: 'nonexistent@example.com' });
 	});
 
+	
 	it('should return false if expert is not found while deleting', async () => {
 		Expert.deleteOne = jest.fn().mockResolvedValue({ deletedCount: 0 });
 

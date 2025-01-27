@@ -1,6 +1,7 @@
 import categorySeeder from '../../../config/categorySeeder';
 import Category, {ICategory} from '../../../models/category';
 import categories from "../../../config/categories";
+import {TestingError} from "../../../types/errorTypes";
 
 
 describe('categorySeeder', () => {
@@ -42,7 +43,7 @@ describe('categorySeeder', () => {
 
 
 	it('should handle errors during seeding', async () => {
-		const error = new Error('Testing error');
+		const error = new TestingError('Testing error');
 		Category.findOne = jest.fn().mockRejectedValue(error);
 
 		await categorySeeder(categories as ICategory[])
@@ -51,6 +52,6 @@ describe('categorySeeder', () => {
 		expect(Category.findOne).toHaveBeenCalled();
 		expect(Category.prototype.save).not.toHaveBeenCalled();
 		expect(errorHandlerMock)
-			.toHaveBeenCalledWith(new Error(`Error seeding categories: ${error.message}`));
+			.toHaveBeenCalledWith(new TestingError(`Error seeding categories: ${error.message}`));
 	});
 });

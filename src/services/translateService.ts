@@ -1,13 +1,14 @@
 import * as deepl from 'deepl-node';
 import dotenv from 'dotenv';
-import {ICustomError} from "../types/errorTypes";
+import {APIError, EnvironmentVariableError} from "../types/errorTypes";
+import {errorValidator} from "../utils/errorHandler";
 
 dotenv.config();
 
 const authKey = process.env.DEEPL_API_KEY;
 
 if (!authKey) {
-	throw new Error('DEEPL_API_KEY is missing');
+	throw new EnvironmentVariableError('DEEPL_API_KEY is missing');
 }
 
 /**
@@ -24,10 +25,7 @@ const translate = async (text: string, targetLanguage: deepl.TargetLanguageCode 
 		const result = await translator.translateText(text, null, targetLanguage);
 		return result.text;
 	}catch(err) {
-		if ((err as ICustomError).message) {
-			throw new Error(`Translation failed: ${(err as ICustomError).message}`);
-		}
-		throw new Error('Translation failed for an unknown reason');
+		throw errorValidator(err, new APIError('Translation failed'));
 	}
 }
 

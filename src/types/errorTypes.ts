@@ -6,6 +6,9 @@ export const defaultErrorMessage = {
 	InputValidationError: "Invalid input data provided",
 	SchemaValidationError: "Schema validation failed",
 	BadDataError: "Invalid or malformed data",
+	LoggingUserError: "Error occurred while logging user",
+	LogoutUserError: "Error occurred while logging out user",
+	LoggedUserError: "User is already logged in",
 	UnauthorizedError: "Unauthorized access",
 	NotFoundError: "The requested resource was not found",
 	InternalServerError: "An internal server error occurred",
@@ -26,7 +29,7 @@ export const defaultErrorMessage = {
 export class InputValidationError extends Error {
 	readonly statusCode = 422;
 
-	constructor(message: string) {
+	constructor(message?: string) {
 		super(message);
 		this.name = "InputValidationError";
 	}
@@ -35,7 +38,7 @@ export class InputValidationError extends Error {
 export class SchemaValidationError extends Error {
 	readonly statusCode = 400;
 
-	constructor(message: string) {
+	constructor(message?: string) {
 		super(message);
 		this.name = "SchemaValidationError";
 	}
@@ -44,16 +47,43 @@ export class SchemaValidationError extends Error {
 export class BadDataError extends Error {
 	readonly statusCode = 400;
 
-	constructor(message: string) {
+	constructor(message?: string) {
 		super(message);
 		this.name = "ValidationError";
+	}
+}
+
+export class LogoutUserError extends Error {
+	readonly statusCode = 401;
+
+	constructor(message?: string) {
+		super(message);
+		this.name = "LogoutUserError";
+	}
+}
+
+export class LoggingUserError extends Error {
+	readonly statusCode = 401;
+
+	constructor(message?: string) {
+		super(message);
+		this.name = "LoggingUserError";
+	}
+}
+
+export class LoggedUserError extends Error {
+	readonly statusCode = 401;
+
+	constructor(message?: string) {
+		super(message);
+		this.name = "LoggedUserError";
 	}
 }
 
 export class UnauthorizedError extends Error {
 	readonly statusCode = 401;
 
-	constructor(message: string) {
+	constructor(message?: string) {
 		super(message);
 		this.name = "UnauthorizedError";
 	}
@@ -62,7 +92,7 @@ export class UnauthorizedError extends Error {
 export class NotFoundError extends Error {
 	readonly statusCode = 404;
 
-	constructor(message: string) {
+	constructor(message?: string) {
 		super(message);
 		this.name = "NotFoundError";
 	}
@@ -71,7 +101,7 @@ export class NotFoundError extends Error {
 export class InternalServerError extends Error {
 	readonly statusCode = 500;
 
-	constructor(message: string) {
+	constructor(message?: string) {
 		super(message);
 		this.name = "InternalServerError";
 	}
@@ -80,7 +110,7 @@ export class InternalServerError extends Error {
 export class DatabaseConnectionError extends Error {
 	readonly statusCode = 500;
 
-	constructor(message: string) {
+	constructor(message?: string) {
 		super(message);
 		this.name = "DatabaseConnectionError";
 	}
@@ -89,7 +119,7 @@ export class DatabaseConnectionError extends Error {
 export class DatabaseUpdatingError extends Error {
 	readonly statusCode = 500;
 
-	constructor(message: string) {
+	constructor(message?: string) {
 		super(message);
 		this.name = "DatabaseUpdatingError";
 	}
@@ -98,7 +128,7 @@ export class DatabaseUpdatingError extends Error {
 export class SessionError extends Error {
 	readonly statusCode = 403;
 
-	constructor(message: string) {
+	constructor(message?: string) {
 		super(message);
 		this.name = "SessionError";
 	}
@@ -107,7 +137,7 @@ export class SessionError extends Error {
 export class CacheError extends Error {
 	readonly statusCode = 500;
 
-	constructor(message: string) {
+	constructor(message?: string) {
 		super(message);
 		this.name = "CacheError";
 	}
@@ -116,7 +146,7 @@ export class CacheError extends Error {
 export class UnknownError extends Error {
 	readonly statusCode = 500;
 
-	constructor(message: string) {
+	constructor(message?: string) {
 		super(message);
 		this.name = "UnknownError";
 	}
@@ -125,7 +155,7 @@ export class UnknownError extends Error {
 export class APIError extends Error {
 	readonly statusCode = 502;
 
-	constructor(message: string) {
+	constructor(message?: string) {
 		super(message);
 		this.name = "APIError";
 	}
@@ -134,7 +164,7 @@ export class APIError extends Error {
 export class NetworkError extends Error {
 	readonly statusCode = 503;
 
-	constructor(message: string) {
+	constructor(message?: string) {
 		super(message);
 		this.name = "NetworkError";
 	}
@@ -143,7 +173,7 @@ export class NetworkError extends Error {
 export class TimeoutError extends Error {
 	readonly statusCode = 504;
 
-	constructor(message: string) {
+	constructor(message?: string) {
 		super(message);
 		this.name = "TimeoutError";
 	}
@@ -152,7 +182,7 @@ export class TimeoutError extends Error {
 export class EnvironmentVariableError extends Error {
 	readonly statusCode = 500;
 
-	constructor(message: string) {
+	constructor(message?: string) {
 		super(message);
 		this.name = "EnvironmentVariableError";
 	}
@@ -167,7 +197,7 @@ export class StartUpError extends Error {
 
 //For testing during development
 export class TestingError extends Error {
-	constructor(message: string) {
+	constructor(message?: string) {
 		super(message);
 		this.name = "TestingError";
 	}
