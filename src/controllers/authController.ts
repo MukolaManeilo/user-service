@@ -67,7 +67,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
 		if (!exists) throw new NotFoundError('The user with this address does not exist');
 
 
-		passport.authenticate('local', (err: any, user: UserUnion, info: any) => {
+		passport.authenticate('local', (err: any, user: UserUnion) => {
 			if (err) throw errorValidator(err, new LoggingUserError());
 			req.logIn(user, (err) => {
 				if (err) throw errorValidator(err, new LoggingUserError());

@@ -1,6 +1,6 @@
 import mongoose, {Schema} from 'mongoose';
 import {ICategory} from "./category";
-import {IRating, RatingSchema} from "./rating";
+import RatingSchema, {IRating} from "./rating";
 import validator from "validator";
 import {UserRole} from "../types/userRole";
 
@@ -42,7 +42,7 @@ const ExpertSchema: Schema<IExpert> = new Schema({
 		relevance: { type: Number, min: 0, max: 1, required: true },
 	}],
 	skills: [{ type: String, required: true, default: []}],
-	rating: { type: RatingSchema, required:true },
+	rating: { type: RatingSchema, default: () => ({}), required: true },
 }, { timestamps: true, })
 
 

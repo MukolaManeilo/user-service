@@ -68,6 +68,7 @@ describe('Auth API Integration Tests', () => {
 			expect(response.status).toBe(200);
 			expect(response.body.message).toBe('User successfully logged in');
 			expect(response.body.expert.email).toBe('john.doe@example.com');
+			expect(response.body.expert.rating.scores).toBe(910);
 			cookie = response.headers['set-cookie'];
 		});
 

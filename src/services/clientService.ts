@@ -22,7 +22,12 @@ export const createClient = async (firstName: string, lastName: string, email: s
 		lastName,
 		email,
 		password: hashedPassword,
-		rating: { scores: 0 },
+		rating: {
+			scores: 0,
+			activityLog: [new Date()],
+			completedTaskPrice: [5, 5, 5],
+			reviews: [5, 5],
+		},
 	});
 	await newClient.save();
 	return newClient;

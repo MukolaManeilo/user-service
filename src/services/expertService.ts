@@ -50,7 +50,12 @@ export const createExpert = async (firstName: string, lastName: string, email: s
 		mentoring: mentoring || false,
 		categories: relevantCategories,
 		skills: skills || [],
-		rating: { scores: 0 },
+		rating: {
+			scores: 0,
+			activityLog: [new Date()],
+			completedTaskPrice: [5, 5, 5],
+			reviews: [5, 5],
+		},
 	});
 	await newExpert.save();
 	return newExpert;

@@ -63,11 +63,13 @@ describe('Auth API Integration Tests', () => {
 					password: 'password123',
 				});
 
-			cookie = response.headers['set-cookie'];
+
 
 			expect(response.status).toBe(200);
 			expect(response.body.message).toBe('User successfully logged in');
 			expect(response.body.client.email).toBe('john.doe@example.com');
+			expect(response.body.client.rating.scores).toBe(910);
+			cookie = response.headers['set-cookie'];
 		});
 
 
