@@ -1,17 +1,17 @@
-import {createClient, deleteClient, getClient, isClientExists, updateClient} from "../../../services/clientService";
-import Client from "../../../models/client";
+import { createClient, deleteClient, getClient, isClientExists, updateClient } from '../../../services/clientService';
+import Client from '../../../models/client';
 
 //jest.mock('../../../models/client');
 
-jest.mock("../../../models/client", () => {
-	const originalModule = jest.requireActual("../../../models/client");
+jest.mock('../../../models/client', () => {
+	const originalModule = jest.requireActual('../../../models/client');
 	return {
 		__esModule: true,
 		...originalModule,
 	};
 });
 
-describe("Client Service", () => {
+describe('Client Service', () => {
 	const mockClient = {
 		_id: '1',
 		firstName: 'John',
@@ -25,7 +25,6 @@ describe("Client Service", () => {
 		jest.clearAllMocks();
 	});
 
-
 	it('should create and save a new client', async (): Promise<void> => {
 		jest.spyOn(Client.prototype, 'save').mockResolvedValue(mockClient);
 
@@ -37,7 +36,6 @@ describe("Client Service", () => {
 		expect(Client.prototype.save).toHaveBeenCalledTimes(1);
 	});
 
-
 	it('should get a client by id', async () => {
 		Client.findById = jest.fn().mockResolvedValue(mockClient);
 
@@ -47,7 +45,6 @@ describe("Client Service", () => {
 		expect(Client.findById).toHaveBeenCalledWith('1');
 	});
 
-
 	it('should get a client by email', async () => {
 		Client.findOne = jest.fn().mockResolvedValue(mockClient);
 
@@ -56,7 +53,6 @@ describe("Client Service", () => {
 		expect(client.firstName).toBe('John');
 		expect(Client.findOne).toHaveBeenCalledWith({ email: 'johndoe@example.com' });
 	});
-
 
 	it('should update a client', async () => {
 		const updatedData = { firstName: 'Jane' };
@@ -72,7 +68,6 @@ describe("Client Service", () => {
 		expect(Client.prototype.save).toHaveBeenCalledTimes(1);
 	});
 
-
 	it('should check if client exists by id', async () => {
 		Client.findById = jest.fn().mockResolvedValue(mockClient);
 
@@ -81,7 +76,6 @@ describe("Client Service", () => {
 		expect(exists).toBe(true);
 		expect(Client.findById).toHaveBeenCalledWith('1');
 	});
-
 
 	it('should check if client exists by email', async () => {
 		Client.findOne = jest.fn().mockResolvedValue(mockClient);
@@ -92,7 +86,6 @@ describe("Client Service", () => {
 		expect(Client.findOne).toHaveBeenCalledWith({ email: 'johndoe@example.com' });
 	});
 
-
 	it('should delete a client', async () => {
 		Client.deleteOne = jest.fn().mockResolvedValue({ deletedCount: 1 });
 
@@ -101,7 +94,6 @@ describe("Client Service", () => {
 		expect(result).toBe(true);
 		expect(Client.deleteOne).toHaveBeenCalledWith({ email: 'johndoe@example.com' });
 	});
-
 
 	it('should return false if client is not found while deleting', async () => {
 		Client.deleteOne = jest.fn().mockResolvedValue({ deletedCount: 0 });

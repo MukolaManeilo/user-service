@@ -14,5 +14,4 @@ const redisStore = new RedisStore({
 	ttl: Number(process.env.REDIS_TTL) || 3600,
 });
 
-
 export { redisClient, redisStore };

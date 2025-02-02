@@ -1,31 +1,31 @@
-import {NextFunction, Request, Response} from 'express';
-import passport from "passport";
-import Expert, {IExpert} from "../models/expert";
-import Client, {IClient} from "../models/client";
-import {createClient, isClientExists} from "../services/clientService";
-import {createExpert, isExpertExists} from "../services/expertService";
-import {UserRole} from "../types/userRole";
-import {errorValidator} from "../utils/errorHandler";
+import { NextFunction, Request, Response } from 'express';
+import passport from 'passport';
+import Expert, { IExpert } from '../models/expert';
+import Client, { IClient } from '../models/client';
+import { createClient, isClientExists } from '../services/clientService';
+import { createExpert, isExpertExists } from '../services/expertService';
+import { UserRole } from '../types/userRole';
+import { UserUnion } from '../types/userUnion';
+import { errorValidator } from '../utils/errorHandler';
 import {
 	InputValidationError,
 	LoggedUserError,
 	LoggingUserError,
 	LogoutUserError,
 	NotFoundError,
-	UnauthorizedError
-} from "../types/errorTypes";
-
+	UnauthorizedError,
+} from '../types/errorTypes';
 
 export const registerUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
-		const {userRole, firstName, lastName, email, password, mentoring, skills} = req.body;
+		const { userRole, firstName, lastName, email, password, mentoring, skills } = req.body;
 
-		if(req.isAuthenticated()) throw new LoggedUserError();
+		if (req.isAuthenticated()) throw new LoggedUserError();
 
-		const exists = await isClientExists({ email }) || await isExpertExists({ email });
+		const exists = (await isClientExists({ email })) || (await isExpertExists({ email }));
 		if (exists) throw new InputValidationError('User with this email already exists.');
 
-		if(userRole === UserRole.Expert){
+		if (userRole === UserRole.Expert) {
 			const newExpert = await createExpert(firstName, lastName, email, password, mentoring, skills);
 
 			req.login(newExpert, (err) => {
@@ -36,7 +36,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
 				});
 			});
 			return;
-		} else if(userRole === UserRole.Client) {
+		} else if (userRole === UserRole.Client) {
 			const newClient = await createClient(firstName, lastName, email, password);
 
 			req.login(newClient, (err) => {
@@ -49,29 +49,27 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
 			return;
 		}
 		throw new InputValidationError('Invalid user role');
-	}
-	catch(err) {
+	} catch (err) {
 		return next(errorValidator(err, 'Registration error'));
 	}
 };
 
-
-
 export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
-	try{
-		const {email, password} = req.body;
+	try {
+		const { email, password } = req.body;
 
-		if(!email || !password) throw new InputValidationError('Email and password are required');
-		if(req.isAuthenticated()) throw new LoggedUserError();
-		const exists = await isClientExists({ email }) || await isExpertExists({ email });
+		if (!email || !password) throw new InputValidationError('Email and password are required');
+		if (req.isAuthenticated()) throw new LoggedUserError();
+		const exists = (await isClientExists({ email })) || (await isExpertExists({ email }));
 		if (!exists) throw new NotFoundError('The user with this address does not exist');
 
-
-		passport.authenticate('local', (err: any, user: UserUnion) => {
+		passport.authenticate('local', (err: Error, user: UserUnion) => {
 			if (err) throw errorValidator(err, new LoggingUserError());
 			req.logIn(user, (err) => {
 				if (err) throw errorValidator(err, new LoggingUserError());
-				let response: {message: string, expert?: IExpert, client?: IClient} = { message: 'User successfully logged in'};
+				let response: { message: string; expert?: IExpert; client?: IClient } = {
+					message: 'User successfully logged in',
+				};
 				if (user instanceof Expert) {
 					response.expert = user;
 				} else if (user instanceof Client) {
@@ -80,16 +78,14 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
 				res.status(200).json(response);
 			});
 		})(req, res, next);
-	}catch(err) {
+	} catch (err) {
 		return next(errorValidator(err, 'LogIn error'));
 	}
 };
 
-
-
 export const logoutUser = (req: Request, res: Response, next: NextFunction) => {
 	try {
-		if(!req.isAuthenticated()) throw new UnauthorizedError();
+		if (!req.isAuthenticated()) throw new UnauthorizedError();
 
 		req.logout((err) => {
 			if (err) {
@@ -98,7 +94,7 @@ export const logoutUser = (req: Request, res: Response, next: NextFunction) => {
 				res.clearCookie('connect.sid').redirect('/');
 			}
 		});
-	} catch(err) {
+	} catch (err) {
 		return next(errorValidator(err, 'Logout error'));
 	}
 };

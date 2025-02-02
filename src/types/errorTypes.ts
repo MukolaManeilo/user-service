@@ -3,35 +3,34 @@ export interface ICustomError extends Error {
 }
 
 export const defaultErrorMessage = {
-	InputValidationError: "Invalid input data provided",
-	SchemaValidationError: "Schema validation failed",
-	BadDataError: "Invalid or malformed data",
-	LoggingUserError: "Error occurred while logging user",
-	LogoutUserError: "Error occurred while logging out user",
-	LoggedUserError: "User is already logged in",
-	UnauthorizedError: "Unauthorized access",
-	NotFoundError: "The requested resource was not found",
-	InternalServerError: "An internal server error occurred",
-	DatabaseConnectionError: "Failed to connect to the database",
-	DatabaseUpdatingError: "Failed to update the database",
-	SessionError: "Session-related error occurred",
-	CacheError: "Cache processing error",
-	UnknownError: "An unknown error occurred",
-	APIError: "API communication error",
-	NetworkError: "Network error occurred",
-	TimeoutError: "The request timed out",
-	EnvironmentVariableError: "Environment variable is missing or invalid",
-	StartUpError: "Error occurred during application startup",
-	TestingError: "Error occurred during testing",
+	InputValidationError: 'Invalid input data provided',
+	SchemaValidationError: 'Schema validation failed',
+	BadDataError: 'Invalid or malformed data',
+	LoggingUserError: 'Error occurred while logging user',
+	LogoutUserError: 'Error occurred while logging out user',
+	LoggedUserError: 'User is already logged in',
+	UnauthorizedError: 'Unauthorized access',
+	NotFoundError: 'The requested resource was not found',
+	InternalServerError: 'An internal server error occurred',
+	DatabaseConnectionError: 'Failed to connect to the database',
+	DatabaseUpdatingError: 'Failed to update the database',
+	SessionError: 'Session-related error occurred',
+	CacheError: 'Cache processing error',
+	UnknownError: 'An unknown error occurred',
+	APIError: 'API communication error',
+	NetworkError: 'Network error occurred',
+	TimeoutError: 'The request timed out',
+	EnvironmentVariableError: 'Environment variable is missing or invalid',
+	StartUpError: 'Error occurred during application startup',
+	TestingError: 'Error occurred during testing',
 };
-
 
 export class InputValidationError extends Error {
 	readonly statusCode = 422;
 
 	constructor(message?: string) {
 		super(message);
-		this.name = "InputValidationError";
+		this.name = 'InputValidationError';
 	}
 }
 
@@ -40,7 +39,7 @@ export class SchemaValidationError extends Error {
 
 	constructor(message?: string) {
 		super(message);
-		this.name = "SchemaValidationError";
+		this.name = 'SchemaValidationError';
 	}
 }
 
@@ -49,7 +48,7 @@ export class BadDataError extends Error {
 
 	constructor(message?: string) {
 		super(message);
-		this.name = "ValidationError";
+		this.name = 'ValidationError';
 	}
 }
 
@@ -58,7 +57,7 @@ export class LogoutUserError extends Error {
 
 	constructor(message?: string) {
 		super(message);
-		this.name = "LogoutUserError";
+		this.name = 'LogoutUserError';
 	}
 }
 
@@ -67,7 +66,7 @@ export class LoggingUserError extends Error {
 
 	constructor(message?: string) {
 		super(message);
-		this.name = "LoggingUserError";
+		this.name = 'LoggingUserError';
 	}
 }
 
@@ -76,7 +75,7 @@ export class LoggedUserError extends Error {
 
 	constructor(message?: string) {
 		super(message);
-		this.name = "LoggedUserError";
+		this.name = 'LoggedUserError';
 	}
 }
 
@@ -85,7 +84,7 @@ export class UnauthorizedError extends Error {
 
 	constructor(message?: string) {
 		super(message);
-		this.name = "UnauthorizedError";
+		this.name = 'UnauthorizedError';
 	}
 }
 
@@ -94,7 +93,7 @@ export class NotFoundError extends Error {
 
 	constructor(message?: string) {
 		super(message);
-		this.name = "NotFoundError";
+		this.name = 'NotFoundError';
 	}
 }
 
@@ -103,7 +102,7 @@ export class InternalServerError extends Error {
 
 	constructor(message?: string) {
 		super(message);
-		this.name = "InternalServerError";
+		this.name = 'InternalServerError';
 	}
 }
 
@@ -112,7 +111,7 @@ export class DatabaseConnectionError extends Error {
 
 	constructor(message?: string) {
 		super(message);
-		this.name = "DatabaseConnectionError";
+		this.name = 'DatabaseConnectionError';
 	}
 }
 
@@ -121,7 +120,7 @@ export class DatabaseUpdatingError extends Error {
 
 	constructor(message?: string) {
 		super(message);
-		this.name = "DatabaseUpdatingError";
+		this.name = 'DatabaseUpdatingError';
 	}
 }
 
@@ -130,7 +129,7 @@ export class SessionError extends Error {
 
 	constructor(message?: string) {
 		super(message);
-		this.name = "SessionError";
+		this.name = 'SessionError';
 	}
 }
 
@@ -139,7 +138,7 @@ export class CacheError extends Error {
 
 	constructor(message?: string) {
 		super(message);
-		this.name = "CacheError";
+		this.name = 'CacheError';
 	}
 }
 
@@ -148,7 +147,7 @@ export class UnknownError extends Error {
 
 	constructor(message?: string) {
 		super(message);
-		this.name = "UnknownError";
+		this.name = 'UnknownError';
 	}
 }
 
@@ -157,7 +156,7 @@ export class APIError extends Error {
 
 	constructor(message?: string) {
 		super(message);
-		this.name = "APIError";
+		this.name = 'APIError';
 	}
 }
 
@@ -166,7 +165,7 @@ export class NetworkError extends Error {
 
 	constructor(message?: string) {
 		super(message);
-		this.name = "NetworkError";
+		this.name = 'NetworkError';
 	}
 }
 
@@ -175,7 +174,7 @@ export class TimeoutError extends Error {
 
 	constructor(message?: string) {
 		super(message);
-		this.name = "TimeoutError";
+		this.name = 'TimeoutError';
 	}
 }
 
@@ -184,14 +183,14 @@ export class EnvironmentVariableError extends Error {
 
 	constructor(message?: string) {
 		super(message);
-		this.name = "EnvironmentVariableError";
+		this.name = 'EnvironmentVariableError';
 	}
 }
 
 export class StartUpError extends Error {
 	constructor(message?: string) {
 		super(message);
-		this.name = "StartUpError";
+		this.name = 'StartUpError';
 	}
 }
 
@@ -199,6 +198,6 @@ export class StartUpError extends Error {
 export class TestingError extends Error {
 	constructor(message?: string) {
 		super(message);
-		this.name = "TestingError";
+		this.name = 'TestingError';
 	}
 }

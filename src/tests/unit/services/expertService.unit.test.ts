@@ -1,10 +1,9 @@
-import {createExpert, deleteExpert, getExpert, isExpertExists, updateExpert} from "../../../services/expertService";
-import Expert from "../../../models/expert";
-import Category from "../../../models/category";
+import { createExpert, deleteExpert, getExpert, isExpertExists, updateExpert } from '../../../services/expertService';
+import Expert from '../../../models/expert';
+import Category from '../../../models/category';
 
-
-jest.mock("../../../models/expert", () => {
-	const originalModule = jest.requireActual("../../../models/expert");
+jest.mock('../../../models/expert', () => {
+	const originalModule = jest.requireActual('../../../models/expert');
 	return {
 		__esModule: true,
 		...originalModule,
@@ -15,7 +14,7 @@ jest.mock("../../../models/expert", () => {
 	};
 });
 
-describe("Expert Service", () => {
+describe('Expert Service', () => {
 	const mockExpert = {
 		_id: '1',
 		firstName: 'John',
@@ -36,12 +35,16 @@ describe("Expert Service", () => {
 		jest.clearAllMocks();
 	});
 
-
 	it('should create and save a new expert', async (): Promise<void> => {
 		Category.find = jest.fn().mockResolvedValue([mockCategory]);
 		jest.spyOn(Expert.prototype, 'save').mockResolvedValue(mockExpert);
 
-		const newExpert = await createExpert('John', 'Doe', 'nonexistent@example.com', 'password123', false, ['JavaScript', 'TypeScript', 'Node.js', 'Express']);
+		const newExpert = await createExpert('John', 'Doe', 'nonexistent@example.com', 'password123', false, [
+			'JavaScript',
+			'TypeScript',
+			'Node.js',
+			'Express',
+		]);
 
 		expect(newExpert.firstName).toBe('John');
 		expect(newExpert.lastName).toBe('Doe');
@@ -49,7 +52,6 @@ describe("Expert Service", () => {
 		expect(Expert.prototype.save).toHaveBeenCalledTimes(1);
 		expect(Category.find).toHaveBeenCalledTimes(1);
 	});
-
 
 	it('should get a expert by id', async () => {
 		Expert.findById = jest.fn().mockResolvedValue(mockExpert);
@@ -60,7 +62,6 @@ describe("Expert Service", () => {
 		expect(Expert.findById).toHaveBeenCalledWith('1');
 	});
 
-
 	it('should get a expert by email', async () => {
 		Expert.findOne = jest.fn().mockResolvedValue(mockExpert);
 
@@ -69,7 +70,6 @@ describe("Expert Service", () => {
 		expect(expert.firstName).toBe('John');
 		expect(Expert.findOne).toHaveBeenCalledWith({ email: 'nonexistent@example.com' });
 	});
-
 
 	it('should update a expert', async () => {
 		const updatedData = { firstName: 'Jane' };
@@ -85,7 +85,6 @@ describe("Expert Service", () => {
 		expect(Expert.prototype.save).toHaveBeenCalledTimes(1);
 	});
 
-
 	it('should check if expert exists by id', async () => {
 		Expert.findById = jest.fn().mockResolvedValue(mockExpert);
 
@@ -94,7 +93,6 @@ describe("Expert Service", () => {
 		expect(exists).toBe(true);
 		expect(Expert.findById).toHaveBeenCalledWith('1');
 	});
-
 
 	it('should check if expert exists by email', async () => {
 		Expert.findOne = jest.fn().mockResolvedValue(mockExpert);
@@ -105,7 +103,6 @@ describe("Expert Service", () => {
 		expect(Expert.findOne).toHaveBeenCalledWith({ email: 'nonexistent@example.com' });
 	});
 
-
 	it('should delete a expert', async () => {
 		Expert.deleteOne = jest.fn().mockResolvedValue({ deletedCount: 1 });
 
@@ -115,7 +112,6 @@ describe("Expert Service", () => {
 		expect(Expert.deleteOne).toHaveBeenCalledWith({ email: 'nonexistent@example.com' });
 	});
 
-	
 	it('should return false if expert is not found while deleting', async () => {
 		Expert.deleteOne = jest.fn().mockResolvedValue({ deletedCount: 0 });
 

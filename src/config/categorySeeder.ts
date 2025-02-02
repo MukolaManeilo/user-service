@@ -1,10 +1,9 @@
-import Category, {ICategory} from '../models/category';
-import {StartUpError} from "../types/errorTypes";
-import {errorValidator} from "../utils/errorHandler";
-
+import Category, { ICategory } from '../models/category';
+import { StartUpError } from '../types/errorTypes';
+import { errorValidator } from '../utils/errorHandler';
 
 const categorySeeder = async (categories: ICategory[]): Promise<void> => {
-	try{
+	try {
 		if (await Category.findOne()) {
 			console.log('Skipping categories seeding.');
 			return;
@@ -12,6 +11,7 @@ const categorySeeder = async (categories: ICategory[]): Promise<void> => {
 			console.log('Seeding categories');
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const createCategoryWithSubcategories = async (category: {
 			name: string;
 			description: string;
@@ -39,7 +39,7 @@ const categorySeeder = async (categories: ICategory[]): Promise<void> => {
 		for (let category of categories) {
 			await createCategoryWithSubcategories(category);
 		}
-	}catch (err) {
+	} catch (err) {
 		throw errorValidator(err, new StartUpError('Error seeding categories'));
 	}
 };

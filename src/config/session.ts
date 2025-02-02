@@ -1,5 +1,5 @@
 import session from 'express-session';
-import {redisStore} from './redis';
+import { redisStore } from './redis';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -10,6 +10,5 @@ const sessionMiddleware = session({
 	resave: false,
 	saveUninitialized: false,
 });
-
 
 export default sessionMiddleware;

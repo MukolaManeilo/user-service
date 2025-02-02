@@ -1,6 +1,5 @@
-import mongoose, {Document, Schema} from 'mongoose';
-import {DatabaseUpdatingError} from "../types/errorTypes";
-
+import mongoose, { Document, Schema } from 'mongoose';
+import { DatabaseUpdatingError } from '../types/errorTypes';
 
 export interface IChat extends Document {
 	expertId: mongoose.Types.ObjectId;
@@ -8,12 +7,14 @@ export interface IChat extends Document {
 	lastMessageId: mongoose.Types.ObjectId;
 }
 
-
-const ChatSchema: Schema<IChat> = new Schema({
-	expertId: { type: Schema.Types.ObjectId, ref: 'Expert', required: true },
-	clientId: { type: Schema.Types.ObjectId, ref: 'Client', required: true },
-	lastMessageId: { type: Schema.Types.ObjectId, ref: 'Message', required: true },
-}, { timestamps: true, })
+const ChatSchema: Schema<IChat> = new Schema(
+	{
+		expertId: { type: Schema.Types.ObjectId, ref: 'Expert', required: true },
+		clientId: { type: Schema.Types.ObjectId, ref: 'Client', required: true },
+		lastMessageId: { type: Schema.Types.ObjectId, ref: 'Message', required: true },
+	},
+	{ timestamps: true }
+);
 
 ChatSchema.index({ expertId: 1, clientId: 1 }, { unique: true });
 ChatSchema.pre('save', function (next) {
@@ -22,7 +23,6 @@ ChatSchema.pre('save', function (next) {
 	}
 	next();
 });
-
 
 const Chat = mongoose.model<IChat>('Chat', ChatSchema);
 export default Chat;

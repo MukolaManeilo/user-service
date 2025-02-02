@@ -1,7 +1,7 @@
 import * as deepl from 'deepl-node';
 import dotenv from 'dotenv';
-import {APIError, EnvironmentVariableError} from "../types/errorTypes";
-import {errorValidator} from "../utils/errorHandler";
+import { APIError, EnvironmentVariableError } from '../types/errorTypes';
+import { errorValidator } from '../utils/errorHandler';
 
 dotenv.config();
 
@@ -24,9 +24,9 @@ const translate = async (text: string, targetLanguage: deepl.TargetLanguageCode 
 		const translator = new deepl.Translator(authKey);
 		const result = await translator.translateText(text, null, targetLanguage);
 		return result.text;
-	}catch(err) {
+	} catch (err) {
 		throw errorValidator(err, new APIError('Translation failed'));
 	}
-}
+};
 
 export default translate;

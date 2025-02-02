@@ -1,5 +1,5 @@
-import {Schema} from 'mongoose';
-import {updateUserRating} from "../services/userService";
+import { Schema } from 'mongoose';
+import { updateUserRating } from '../services/userService';
 
 export interface IRating {
 	scores: number;

@@ -1,18 +1,18 @@
-import {NextFunction, Request, Response} from 'express';
-import {UserRole} from "../types/userRole";
-import Client from "../models/client";
-import Expert from "../models/expert";
-import {deleteExpert, getExpert, isExpertExists, updateExpert} from "../services/expertService";
-import {deleteClient, getClient, isClientExists, updateClient} from "../services/clientService";
+import { NextFunction, Request, Response } from 'express';
+import { UserRole } from '../types/userRole';
+import { UserUnion } from '../types/userUnion';
+import Client from '../models/client';
+import Expert from '../models/expert';
+import { deleteExpert, getExpert, isExpertExists, updateExpert } from '../services/expertService';
+import { deleteClient, getClient, isClientExists, updateClient } from '../services/clientService';
 import {
 	DatabaseUpdatingError,
 	InputValidationError,
 	LogoutUserError,
 	NotFoundError,
-	UnauthorizedError
-} from "../types/errorTypes";
-import {errorValidator} from "../utils/errorHandler";
-
+	UnauthorizedError,
+} from '../types/errorTypes';
+import { errorValidator } from '../utils/errorHandler';
 
 export const getUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
@@ -24,12 +24,12 @@ export const getUser = async (req: Request, res: Response, next: NextFunction): 
 
 		const userIsExpert: boolean = await isExpertExists({ id: userId });
 		if (userIsExpert) {
-			user = await getExpert({id: userId});
+			user = await getExpert({ id: userId });
 			userType = 'Expert';
 		} else {
 			const userIsClient: boolean = await isClientExists({ id: userId });
 			if (userIsClient) {
-				user = await getClient({id: userId});
+				user = await getClient({ id: userId });
 				userType = 'Client';
 			}
 		}
@@ -44,38 +44,34 @@ export const getUser = async (req: Request, res: Response, next: NextFunction): 
 	}
 };
 
-
-
 export const updateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
-		if(!req.isAuthenticated()) throw new UnauthorizedError();
+		if (!req.isAuthenticated()) throw new UnauthorizedError();
 		const userRole: UserRole = (req.user as UserUnion).userRole;
 		let newUser = null;
 
-		if(userRole === UserRole.Expert){
-			if(req.user instanceof Expert){
-				newUser = await updateExpert({id: req.user.id}, req.body);
+		if (userRole === UserRole.Expert) {
+			if (req.user instanceof Expert) {
+				newUser = await updateExpert({ id: req.user.id }, req.body);
 			}
-		} else if(userRole === UserRole.Client) {
-			if(req.user instanceof Client) {
-				newUser = await updateClient({id: req.user.id}, req.body);
+		} else if (userRole === UserRole.Client) {
+			if (req.user instanceof Client) {
+				newUser = await updateClient({ id: req.user.id }, req.body);
 			}
 		}
 
-		if(newUser){
+		if (newUser) {
 			res.status(201).json({
 				message: `${userRole} updated successfully`,
 				user: newUser,
 			});
-		}else {
+		} else {
 			throw new DatabaseUpdatingError('Error updating user');
 		}
 	} catch (err) {
 		return next(errorValidator(err, 'Update user error'));
 	}
 };
-
-
 
 export const deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
@@ -106,7 +102,6 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
 		} else {
 			throw new DatabaseUpdatingError('Error deleting user');
 		}
-
 	} catch (err) {
 		return next(errorValidator(err, 'Delete user error'));
 	}

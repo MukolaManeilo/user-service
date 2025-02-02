@@ -1,8 +1,7 @@
-import {hashPassword} from '../utils/hash';
-import Client, {IClient} from "../models/client";
-import {DatabaseUpdatingError, InternalServerError, NotFoundError} from "../types/errorTypes";
-import {errorValidator} from "../utils/errorHandler";
-
+import { hashPassword } from '../utils/hash';
+import Client, { IClient } from '../models/client';
+import { DatabaseUpdatingError, InternalServerError, NotFoundError } from '../types/errorTypes';
+import { errorValidator } from '../utils/errorHandler';
 
 /**
  * Type representing an identifier for a Client.
@@ -12,10 +11,14 @@ import {errorValidator} from "../utils/errorHandler";
  */
 type ClientIdentifier = { id: string; email?: never } | { email: string; id?: never };
 
-
-export const createClient = async (firstName: string, lastName: string, email: string, password: string): Promise<IClient> => {
+export const createClient = async (
+	firstName: string,
+	lastName: string,
+	email: string,
+	password: string
+): Promise<IClient> => {
 	const hashedPassword = await hashPassword(password);
-	if(!hashedPassword) throw new InternalServerError('Error hashing password');
+	if (!hashedPassword) throw new InternalServerError('Error hashing password');
 
 	const newClient = new Client({
 		firstName,
@@ -33,8 +36,6 @@ export const createClient = async (firstName: string, lastName: string, email: s
 	return newClient;
 };
 
-
-
 export const getClient = async (identifier: ClientIdentifier): Promise<IClient> => {
 	const client = identifier.id
 		? await Client.findById(identifier.id)
@@ -43,8 +44,6 @@ export const getClient = async (identifier: ClientIdentifier): Promise<IClient> 
 	return client;
 };
 
-
-
 export const updateClient = async (identifier: ClientIdentifier, data: Partial<IClient>): Promise<IClient> => {
 	const client = identifier.id
 		? await Client.findById(identifier.id)
@@ -52,14 +51,11 @@ export const updateClient = async (identifier: ClientIdentifier, data: Partial<I
 	if (!client) throw new NotFoundError('Client not found');
 
 	Object.assign(client, data);
-	await client.save()
-		.catch((err) => {
-			throw errorValidator(err, new DatabaseUpdatingError(`Error updating client`));
-		});
+	await client.save().catch((err) => {
+		throw errorValidator(err, new DatabaseUpdatingError(`Error updating client`));
+	});
 	return client;
-}
-
-
+};
 
 export const isClientExists = async (identifier: ClientIdentifier): Promise<boolean> => {
 	const client = identifier.id
@@ -68,12 +64,8 @@ export const isClientExists = async (identifier: ClientIdentifier): Promise<bool
 	return !!client;
 };
 
-
-
 export const deleteClient = async (identifier: ClientIdentifier): Promise<boolean> => {
-	const filter = identifier.id
-		? { _id: identifier.id }
-		: { email: identifier.email };
+	const filter = identifier.id ? { _id: identifier.id } : { email: identifier.email };
 
 	const client = await Client.deleteOne(filter);
 	return client.deletedCount > 0;

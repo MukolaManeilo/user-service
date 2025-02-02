@@ -1,4 +1,4 @@
-import {IRating} from "../models/rating";
+import { IRating } from '../models/rating';
 
 /**
  * Calculates the weighted average of an array of numbers.
@@ -28,7 +28,6 @@ const weightedAverage = (arr: number[]): number => {
 	return totalWeight ? sum / totalWeight : 0;
 };
 
-
 /**
  * Updates the user rating based on their activity log, task prices, and reviews.
  *
@@ -40,7 +39,7 @@ export const updateUserRating = async (rating: IRating): Promise<number> => {
 	const thirtyDaysAgo = new Date();
 	thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-	const activeDays = (rating.activityLog || []).filter(date => date >= thirtyDaysAgo).length;
+	const activeDays = (rating.activityLog || []).filter((date) => date >= thirtyDaysAgo).length;
 
 	const completedTasks = rating.completedTaskPrice?.length || 0;
 	const recentTaskPrices = rating.completedTaskPrice?.slice(-50) || [];

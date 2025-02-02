@@ -95,7 +95,7 @@ const categories = [
 						description: 'Algorithms for unsupervised learning.',
 						tags: ['K-Means', 'PCA', 'Clustering'],
 					},
-				]
+				],
 			},
 			{
 				name: 'Deep Learning',
