@@ -30,13 +30,28 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
 
       - name: Install dependencies
         run: yarn install
 
+      - name: Wait for MongoDB to be ready
+        run: |
+          until docker compose exec mongodb sh -c 'nc -z mongodb 27017'; do
+            echo "Waiting for MongoDB to be ready..."
+            sleep 2
+          done
+      
+      - name: Wait for Redis to be ready
+        run: |
+          until docker compose exec redis sh -c 'nc -z redis 6379'; do
+            echo "Waiting for Redis to be ready..."
+            sleep 2
+          done
+
+
       - name: Start services
-        run: docker compose up -d
+        run: docker compose up ssp
 
       - name: Run tests
         run: yarn test:dev
