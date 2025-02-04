@@ -1,0 +1,35 @@
+services:
+
+  mongodb:
+    image: mongo:6.0-jammy
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6379:6379"
+
+  ssp:
+    image: ssp
+    build: .
+    restart: always
+    depends_on:
+      - redis
+      - mongodb
+    ports:
+      - "${PORT}:${PORT}"
+    environment:
+      - PORT=3000
+      - SESSION_SECRET=
+      - REDIS_URL=redis:6379
+      - MONGODB_URI=mongodb://mongodb:27017/ssp-db
+      - TESTING_MONGODB_URI=mongodb://mongodb:27017/test-ssp-db
+      - DEEPL_API_KEY=
+
+volumes:
+  mongo_data:

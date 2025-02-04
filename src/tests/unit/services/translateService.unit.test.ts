@@ -1,8 +1,8 @@
+/* eslint-disable import/first */
+jest.mock('deepl-node');
 import translate from '../../../services/translateService';
 import * as deepl from 'deepl-node';
 import { TestingError } from '../../../types/errorTypes';
-
-jest.mock('deepl-node');
 
 describe('Unit tests for translateService', () => {
 	const mockTranslator = {

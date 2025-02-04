@@ -9,19 +9,20 @@ import categories from '../../config/categories';
 import Category, { ICategory } from '../../models/category';
 import { errorHandler } from '../../utils/errorHandler';
 import Redis from 'ioredis';
+import { EnvironmentVariableError } from '../../types/errorTypes';
 
 dotenv.config();
 
-const redisClient = new Redis({
-	host: String(process.env.REDIS_HOST) || 'localhost',
-	port: Number(process.env.REDIS_PORT) || 6379,
-});
+const redisURL = process.env.REDIS_URL;
+if (!redisURL) errorHandler(new EnvironmentVariableError('REDIS_URL is not defined in .env file'));
+
+const redisClient = new Redis(redisURL as string);
 
 describe('Auth API Integration Tests', () => {
 	let cookie: string;
 
 	beforeAll(async () => {
-		const dbUri = String(process.env.TESTING_DB_URI);
+		const dbUri = String(process.env.TESTING_MONGODB_URI);
 		await connectDB(dbUri);
 		await categorySeeder(categories as ICategory[]).catch((err) => errorHandler(err));
 	});
