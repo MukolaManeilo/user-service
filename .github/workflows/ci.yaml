@@ -50,8 +50,8 @@ jobs:
           done
 
 
-      - name: Start services
-        run: docker compose up ssp
+      - name: Start Containers
+        run: docker compose up -d
 
       - name: Run tests
         run: yarn test:dev
