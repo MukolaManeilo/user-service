@@ -12,7 +12,7 @@ This is the server-side of a platform for searching specialists, allowing users 
 - **Docker** — for containerizing the application.
 - **ElasticSearch** — for search optimization.
 - **Jest** — for testing.
-- **GitHub CI/CD** — for automating deployment and testing processes.
+- **GitHub Actions** — for automating deployment and testing processes.
 - **Passport.js** — for user authentication via email.
 
 ## Features:
