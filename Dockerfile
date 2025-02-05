@@ -1,8 +1,6 @@
-FROM node:22.11-alpine
+FROM node:alpine3.20
 WORKDIR /app
-COPY package.json ./
-RUN yarn install
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 COPY . .
 RUN yarn build
-EXPOSE 3000
-CMD ["yarn", "start"]

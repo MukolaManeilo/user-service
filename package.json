@@ -3,19 +3,18 @@
   "version": "1.0.0",
   "main": "server.ts",
   "scripts": {
-    "build:prod": "rm -rf dist && tsc --project tsconfig.prod.json --removeComments",
     "build": "rm -rf dist && tsc",
+    "build:prod": "rm -rf dist && tsc --project tsconfig.prod.json --removeComments",
     "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts",
     "test:dev": "jest --runInBand src",
-    "test:build": "jest --runInBand dist",
+    "test:ci": "jest --runInBand dist",
     "lint": "eslint 'src/**/*.{ts,js}' --fix",
     "format": "prettier --write 'src/**/*.{ts,js}'"
   },
   "repository": "git@github.com:MukolaManeilo/skill-share-platform-server.git",
   "author": "Mukola Maneilo",
   "license": "MIT",
-
   "dependencies": {
     "@types/validator": "^13.12.2",
     "axios": "^1.7.9",

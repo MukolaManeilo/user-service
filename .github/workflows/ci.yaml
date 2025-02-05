@@ -11,7 +11,7 @@ on:
       - main
 
 jobs:
-  test:
+  tests:
     runs-on: ubuntu-latest
     environment: CI
 
@@ -32,15 +32,12 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install dependencies
-        run: yarn install
-
       - name: Wait for MongoDB to be ready
         run: |
           docker compose up -d mongodb
           until nc -z localhost 27017; do
             echo "Waiting for MongoDB to be ready..."
-            sleep 2
+            sleep 3
           done
       
       - name: Wait for Redis to be ready
@@ -48,12 +45,19 @@ jobs:
           docker compose up -d redis
           until nc -z localhost 6379; do
             echo "Waiting for Redis to be ready..."
-            sleep 2
+            sleep 3
           done
 
 
       - name: Start Containers
         run: docker compose up -d
+        env:
+          PORT: ${{ vars.PORT }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          REDIS_URL: ${{ vars.REDIS_URL }}
+          MONGODB_URI: ${{ vars.MONGODB_URI }}
+          TESTING_MONGODB_URI: ${{ vars.TESTING_MONGODB_URI }}
+          DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
 
       - name: Run tests
-        run: yarn test:dev
+        run: yarn run test:ci
