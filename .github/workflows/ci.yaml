@@ -49,7 +49,7 @@ jobs:
           done
 
 
-      - name: Start Containers
+      - name: Start Container
         run: docker compose up -d
         env:
           PORT: ${{ vars.PORT }}
@@ -58,6 +58,9 @@ jobs:
           MONGODB_URI: ${{ vars.MONGODB_URI }}
           TESTING_MONGODB_URI: ${{ vars.TESTING_MONGODB_URI }}
           DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
 
       - name: Run tests
         run: yarn run test:ci
