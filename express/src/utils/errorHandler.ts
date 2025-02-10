@@ -49,7 +49,7 @@ const errorValidator = (unknownValidError: any, alterValue?: ICustomError | stri
 };
 
 const errorLogger = (err: ICustomError) => {
-	console.error(`${err.name} : ${err.statusCode || 500} : ${err.message}`);
+	console.log(`${err.name} : ${err.statusCode || 500} : ${err.message}`);
 };
 
 const errorHandler = (err: ICustomError, req?: Request, res?: Response) => {
@@ -58,7 +58,7 @@ const errorHandler = (err: ICustomError, req?: Request, res?: Response) => {
 	if (req && res) {
 		return res.status(err.statusCode || 500).json({ message: err.message });
 	} else if (err.name === 'StartUpError' || err.name === 'EnvironmentVariableError') {
-		process.exit(1);
+		//process.exit(1);
 	} else if (err.name === 'TestingError') {
 		console.log('Testing Error Handling');
 	}

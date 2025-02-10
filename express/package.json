@@ -8,7 +8,7 @@
     "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts",
     "test:dev": "jest --runInBand src",
-    "test:ci": "jest --runInBand dist",
+    "test:ci": "jest --runInBand dist --config jest.config.dist.js\n",
     "lint": "eslint 'src/**/*.{ts,js}' --fix",
     "format": "prettier --write 'src/**/*.{ts,js}'"
   },
