@@ -5,6 +5,7 @@ import appConfig from '../config/app.config';
 @Module({
   imports: [
     ConfigModule.forRoot({
+      isGlobal: true,
       load: [appConfig],
     }),
   ],
