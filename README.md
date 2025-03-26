@@ -1,33 +1,33 @@
-# Specialist Search Platform
+# Specialist Search Platform - User Service
 
-This is the server-side of a platform for searching specialists, allowing users to find professionals in various fields through an advanced search system. Specialists are automatically ranked in multiple categories based on their skills, ensuring accurate search results and platform efficiency.
+🚨 **Project Discontinued** 🚨  
+This microservice is no longer under active development, and no further commits or updates will be made.
+
+## About This Microservice
+This is one of the microservices of the **Specialist Search Platform**, responsible for user data management and user interactions. It handles user authentication, profile management, and rating calculations.
+
+📌 **Important:** This repository **only** covers the user-related functionality. Other key features, such as **chat** and **search**, are managed by separate microservices and are **not described here**.
 
 ## Tech Stack:
-- **Node.js** — for server-side logic.
-- **TypeScript** — for writing typed code.
-- **NestJS** — migrating from **Express** to enhance scalability and maintainability.
-- **MongoDB** and **Mongoose** — for database management.
-- **Redis** — for session storage.
-- **WebSocket** — for implementing chat functionality (planned).
-- **Docker** — for containerizing the application.
-- **ElasticSearch** — for search optimization.
-- **Jest** — for testing.
-- **GitHub Actions** — for automating deployment and testing processes.
-- **Passport.js** — for user authentication via email.
+- **Node.js** — server-side logic.
+- **TypeScript** — typed code.
+- **NestJS** (migration from **Express**) — for scalability and maintainability.
+- **PostgreSQL** — relational database.
+- **Prisma ORM** — database management.
+- **Redis** — session storage.
+- **Docker** — containerization.
+- **Jest** — testing.
+- **GitHub Actions** — CI/CD automation.
+- **Passport.js** — user authentication.
 
 ## Features:
-- **Email** registration and authentication via **Passport.js**.
-- Local session storage in **Redis**.
-- Advanced **ElasticSearch**-based search system with **Deepl API** integration for automatically translating search queries into English.
-- Automated categorization system: specialists do not manually select categories — the system automatically determines the best-fit categories based on their skills.
-- A **rating system** that is based on user activity over the past 30 days, average task cost, and reviews (rated from 1 to 10).
-- Ratings are assigned to both users and mentors/consultants.
-- Interaction with experts can be both free and paid.
-- **Task creation** and acceptance within the chat: a user can create a task, and another can accept or reject it.
-- **Randomization** of search results to enhance visibility for users with lower ratings.
+- **User authentication** via email using **Passport.js**.
+- **Profile management**, including skill categorization.
+- **Rating system** based on user activity, reviews, and task history.
+- **Session management** with **Redis**.
 
-## MongoDB Schema Visualization:
-For a visual representation of the MongoDB schema, [check out the following link](https://dbdiagram.io/d/66f02eafa0828f8aa6a77277).
+## Database Schema:
+The database is managed with **Prisma ORM** and **PostgreSQL**.
 
-## Development Status:
-Please note that the platform is still under development. The server-side functionality is being actively worked on, with significant parts not yet implemented. The platform is transitioning from **Express** to **NestJS** to improve code structure, maintainability, and scalability. The client-side will be developed and deployed in a separate repository once the server-side functionality is in place.
+## Status:
+🚨 **This microservice is discontinued, and no further updates will be made.** 🚨  
