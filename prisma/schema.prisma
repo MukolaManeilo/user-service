@@ -1,16 +1,3 @@
-model Expert {
-  id        String   @id @default(uuid())
-  firstName String
-  lastName  String
-  email     String   @unique
-  password  String
-  balance   Decimal  @default(0.0)
-  mentoring Boolean  @default(false)
-  skills    String[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -18,4 +5,99 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DB_URL")
+}
+
+model Expert {
+  id         String           @id @default(uuid())
+  firstName  String
+  lastName   String
+  email      String           @unique
+  password   String
+  userRole   UserRole
+  balance    Float            @default(0)
+  mentoring  Boolean          @default(false)
+  categories ExpertCategory[]
+  skills     String[]
+  rating     Rating           @relation(fields: [ratingId], references: [id])
+  ratingId   String
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  Task       Task[]
+}
+
+model Client {
+  id        String   @id @default(uuid())
+  firstName String
+  lastName  String
+  email     String   @unique
+  password  String
+  userRole  UserRole
+  balance   Float    @default(0)
+  rating    Rating   @relation(fields: [ratingId], references: [id])
+  ratingId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Task      Task[]
+}
+
+model Rating {
+  id                 String     @id @default(uuid())
+  scores             Float
+  activityLog        DateTime[]
+  completedTaskPrice Float[]
+  reviews            Int[]
+  Expert             Expert[]
+  Client             Client[]
+}
+
+model Category {
+  id               String           @id @default(uuid())
+  name             String           @unique
+  description      String
+  tags             String[]
+  subCategories    Category[]       @relation("SubCategories")
+  parentCategory   Category?        @relation("SubCategories", fields: [parentCategoryId], references: [id])
+  parentCategoryId String?
+  ExpertCategory   ExpertCategory[]
+}
+
+model ExpertCategory {
+  expert     Expert   @relation(fields: [expertId], references: [id])
+  expertId   String
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+  relevance  Float
+
+  @@id([expertId, categoryId])
+}
+
+model Task {
+  id              String     @id @default(uuid())
+  expert          Expert     @relation(fields: [expertId], references: [id])
+  expertId        String
+  client          Client     @relation(fields: [clientId], references: [id])
+  clientId        String
+  status          TaskStatus
+  price           Float      @default(0)
+  taskDescription String
+  startDate       DateTime
+  deadline        DateTime
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
+enum UserRole {
+  Client
+  Expert
+}
+
+enum TaskStatus {
+  NotStarted
+  InProgress
+  Review
+  OnHold
+  Completed
+  Overdue
+  NotAccepted
+  Cancelled
 }
